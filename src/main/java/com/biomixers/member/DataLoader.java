@@ -34,11 +34,11 @@ public class DataLoader implements ApplicationRunner {
         availability.put("Monday", new String[]{"Breakfast", "Lunch"});
         //availability.put("Monday", "Breakfast");
 
-        //Member member = null;
         //member = new Member(new String[]{"American", "Mexican"}, "Dan Bernstein", "dan@swssupport.com", 11, new int[]{33, 45, 66}, availability, 0);
         //member = new Member(2, "TEST", "dan2@swssupport.com");
-        Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, null, availability, 0);
 
+        //Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, null, availability, 0);
+        Member member = null;
 
 
         if(member != null){

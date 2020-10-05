@@ -47,26 +47,18 @@ public class MemberController {
         // TODO:  Should I be storing this query somewhere else, and then referencing it in getMembers()?
         searchFilterQuery = filter;
         System.out.println(searchFilterQuery.toString());
-        getMembers();
+        generateSampleData();
+        getAllMembers();
 
 
         return new ResponseEntity<SearchFilterQuery>(searchFilterQuery, HttpStatus.OK);
     }
 
     @GetMapping("/add")
-    public void addMember() {
-        HashMap availability = new HashMap();
+    public ResponseEntity<Member> addMember() {
+        Member member = memberService.addMember();
 
-        availability.put("Monday", new String[]{"Breakfast", "Lunch"});
-
-        List<Integer> list = Arrays.asList(33, 45, 66);
-
-        //Member member = new Member(11, "Dan Bernstein", "dan@swssupport.com", null, null, null, 0);
-        //Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, new String[]{"American", "Mexican"}, availability, 0);
-        Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, null, null, 0);
-
-        //memberRepository.save(member);
-
+        return new ResponseEntity<Member>(member, HttpStatus.OK);
     }
 
     @GetMapping("/member/{user_id}")
@@ -78,120 +70,13 @@ public class MemberController {
 
 
     @GetMapping("/members")
-    public List<Member> getMembers() {
+    public List<Member> getAllMembers() {
+        return memberService.getAllMembers();
+    }
 
-        // USE http://localhost:8080/filter post to run /members
-             /*
-    // USE THIS FOR TESTING THE POST
-    {
-"minAllowedPerRestaurant": 6,
-"maxAllowedPerRestaurant": 12,
-"numDaysOfAvailability": 3,
-"numFoodPreferences": 3,
-  "randomizeResults": false
-}
-     */
-
-
-        memberService.getAllMembers();
-        List<Member> members = new ArrayList<>();
-
-        int total_num_members = memberRepository.findAll().size();
-
-        memberRepository.findAll()
-                .forEach(members::add);
-
-        Integer allMemberIds[] = new Integer[total_num_members];
-
-        /*
-        int count = 0;
-        for (Member member: members){
-            all_member_ids[count] = member.getUser_id();
-            count++;
-        }
-
-         */
-
-        for (int i = 0; i < total_num_members; i++){
-            allMemberIds[i] = members.get(i).getUser_id();
-        }
-
-
-
-        for (Member member: members){
-
-            ArrayList<String> avail_options = new ArrayList<>();
-            avail_options.add("Breakfast");
-            avail_options.add("Lunch");
-            avail_options.add("Dinner");
-
-            HashMap<String, String[]> availability = new HashMap<>();
-
-            //availability.put("Monday", new String[]{"Breakfast", "Lunch"});
-
-
-            Random rand = new Random();
-
-            // Sets random generator seed, forces consistency in sample data
-            //if(!searchFilterQuery.isRandomizeResults()) {
-                rand.setSeed(member.getUser_id());
-            //}
-
-            // TODO:  Use searchFilterQuery.getNumDaysOfAvailability to figure out how many of these days to include
-            availability.put("Monday", HelperFunctions.randomAvailability(avail_options, 2, rand));
-            rand.setSeed(member.getUser_id() + 1);
-
-//            availability.put("Tuesday", HelperFunctions.randomAvailability(avail_options, 2, rand));
-//            rand.setSeed(member.getUser_id() + 2);
-
-            availability.put("Wednesday", HelperFunctions.randomAvailability(avail_options, 2, rand));
-            rand.setSeed(member.getUser_id() + 3);
-
-            availability.put("Thursday", HelperFunctions.randomAvailability(avail_options, 2, rand));
-            rand.setSeed(member.getUser_id() + 4);
-
-            availability.put("Friday", HelperFunctions.randomAvailability(avail_options, 2, rand));
-            rand.setSeed(member.getUser_id());
-
-
-            List<Integer> list1 = HelperFunctions.convertArrayToList(allMemberIds);
-
-            // Choose random sample of 25% of members_met
-            ArrayList<Integer> list2 = (ArrayList<Integer>) HelperFunctions.randomSampleInt(list1, total_num_members / 4, rand);
-
-
-            ArrayList<Integer> members_met = list2;
-
-
-
-
-            // TODO:  Use searchFilterQuery.getNumFoodPreferences to figure out how many of these days to include
-            //String[] food_options = new String[]{"American", "Italian", "Mexican", "Indian", "Chinese"};
-            ArrayList<String> food_options = new ArrayList<>();
-            food_options.add("American");
-            food_options.add("Italian");
-            food_options.add("Mexican");
-            food_options.add("Indian");
-            food_options.add("Chinese");
-
-
-            List<String> food_preferences = food_options;
-            //List<String> food_preferences = HelperFunctions.randomFoodPreferences(food_options, 3, rand);
-
-
-            member.setAvailability(availability);
-            member.setFood_preferences(food_preferences);
-            member.setMembersMet(members_met);
-
-
-            memberRepository.save(member);
-
-
-
-        }
-
-        return members;
-
+    @GetMapping("/generate-sample-data")
+    public List<Member> generateSampleData(){
+        return memberService.generateSampleData();
     }
 
 

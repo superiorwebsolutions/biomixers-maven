@@ -1,24 +1,26 @@
 package com.biomixers.filter;
 
 public class SearchFilterQuery {
-    private int minAllowedPerRestaurant;
-    private int maxAllowedPerRestaurant;
-    private int numDaysOfAvailability;
-    private int numFoodPreferences;
-    private boolean randomizeResults;
+    private int minAllowedPerRestaurant = 6;
+    private int maxAllowedPerRestaurant = 14;
+    private int numDaysOfAvailability = 4;
+    private int numFoodPreferences = 3;
+    private float percentageOfMembersMet = 0.25f;
+    private boolean randomizeResults = false;
 
     public SearchFilterQuery(){
 
     }
 
 
-    public SearchFilterQuery(int minAllowedPerRestaurant, int maxAllowedPerRestaurant, int numDaysOfAvailability, int numFoodPreferences, boolean randomize_results) {
+    public SearchFilterQuery(int minAllowedPerRestaurant, int maxAllowedPerRestaurant, int numDaysOfAvailability, int numFoodPreferences, float percentageOfMembersMet, boolean randomizeResults) {
         super();
         this.minAllowedPerRestaurant = minAllowedPerRestaurant;
         this.maxAllowedPerRestaurant = maxAllowedPerRestaurant;
         this.numDaysOfAvailability = numDaysOfAvailability;
         this.numFoodPreferences = numFoodPreferences;
-        this.randomizeResults = randomize_results;
+        this.percentageOfMembersMet = percentageOfMembersMet;
+        this.randomizeResults = randomizeResults;
     }
 
     public int getMinAllowedPerRestaurant() {
@@ -53,6 +55,14 @@ public class SearchFilterQuery {
         this.numFoodPreferences = numFoodPreferences;
     }
 
+    public float getPercentageOfMembersMet() {
+        return percentageOfMembersMet;
+    }
+
+    public void setPercentageOfMembersMet(float percentageOfMembersMet) {
+        this.percentageOfMembersMet = percentageOfMembersMet;
+    }
+
     public boolean isRandomizeResults() {
         return randomizeResults;
     }
@@ -61,7 +71,6 @@ public class SearchFilterQuery {
         this.randomizeResults = randomizeResults;
     }
 
-
     @Override
     public String toString() {
         return "SearchFilterQuery{" +
@@ -69,6 +78,7 @@ public class SearchFilterQuery {
                 ", maxAllowedPerRestaurant=" + maxAllowedPerRestaurant +
                 ", numDaysOfAvailability=" + numDaysOfAvailability +
                 ", numFoodPreferences=" + numFoodPreferences +
+                ", percentageOfMembersMet=" + percentageOfMembersMet +
                 ", randomizeResults=" + randomizeResults +
                 '}';
     }
