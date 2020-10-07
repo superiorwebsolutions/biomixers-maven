@@ -1,14 +1,14 @@
 package com.biomixers.event;
 
-import java.util.List;
+import java.util.HashMap;
 
 public class EventBranch {
     int configId;
     int totalPmc;
     int count;
-    List<EventMemberAttending> membersAttending;
+    HashMap<Integer, EventMemberAttending> membersAttending;
     int totalNumActiveConfigs;
-    List<String> foodType;
+    String foodType;
     String dayOfWeek;
     String timeOfDay;
 
@@ -16,7 +16,7 @@ public class EventBranch {
 
     }
 
-    public EventBranch(int configId, int totalPmc, int count, List<EventMemberAttending> membersAttending, int totalNumActiveConfigs, List<String> foodType, String dayOfWeek, String timeOfDay) {
+    public EventBranch(int configId, int totalPmc, int count, HashMap<Integer, EventMemberAttending> membersAttending, int totalNumActiveConfigs, String foodType, String dayOfWeek, String timeOfDay) {
         super();
         this.configId = configId;
         this.totalPmc = totalPmc;
@@ -52,11 +52,11 @@ public class EventBranch {
         this.count = count;
     }
 
-    public List<EventMemberAttending> getMembersAttending() {
+    public HashMap<Integer, EventMemberAttending> getMembersAttending() {
         return membersAttending;
     }
 
-    public void setMembersAttending(List<EventMemberAttending> membersAttending) {
+    public void setMembersAttending(HashMap<Integer, EventMemberAttending> membersAttending) {
         this.membersAttending = membersAttending;
     }
 
@@ -68,11 +68,11 @@ public class EventBranch {
         this.totalNumActiveConfigs = totalNumActiveConfigs;
     }
 
-    public List<String> getFoodType() {
+    public String getFoodType() {
         return foodType;
     }
 
-    public void setFoodType(List<String> foodType) {
+    public void setFoodType(String foodType) {
         this.foodType = foodType;
     }
 

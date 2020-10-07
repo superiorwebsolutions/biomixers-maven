@@ -157,6 +157,8 @@ public class Member {
 
     @Override
     public String toString() {
+        return "Member{" + full_name;
+        /*
         return "Member{" +
                 "user_id=" + user_id +
                 ", food_preferences=" + food_preferences +
@@ -166,6 +168,8 @@ public class Member {
                 ", availability=" + availability +
                 ", num_active_configs=" + num_active_configs +
                 '}';
+
+         */
     }
 }
 
