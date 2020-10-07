@@ -1,11 +1,6 @@
 package com.biomixers.member;
 
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -30,7 +25,7 @@ public class Member {
 
 
     @Column(name = "full_name")
-    private String full_name;
+    private String fullName;
 
     @Column(name = "email")
     private String email;
@@ -54,13 +49,13 @@ public class Member {
     private Map<String, String[]> availability;
 
     @Column(name = "num_active_configs")
-    private int num_active_configs;
+    private int numActiveConfigs;
 
     protected Member(){
 
     }
 
-    public Member(int user_id, String email, String full_name) {
+    public Member(int user_id, String email, String fullName) {
         super();
 
         /*
@@ -79,24 +74,31 @@ public class Member {
         int num_active_configs = 0;
 
         this.food_preferences = food_preferences;
-        this.full_name = full_name;
+        this.fullName = fullName;
         this.email = email;
         this.user_id = user_id;
         this.membersMet = met;
         this.availability = null;
-        this.num_active_configs = num_active_configs;
+        this.numActiveConfigs = num_active_configs;
     }
 
-    public Member(int user_id, String email, String full_name, List<Integer> membersMet, List<String> food_preferences, HashMap availability, int num_active_configs) {
+    public Member(int user_id, String email, String fullName, List<Integer> membersMet, List<String> food_preferences, HashMap availability, int numActiveConfigs) {
         super();
 
         this.food_preferences = food_preferences;
-        this.full_name = full_name;
+        this.fullName = fullName;
         this.email = email;
         this.user_id = user_id;
         this.membersMet = membersMet;
         this.availability = availability;
-        this.num_active_configs = num_active_configs;
+        this.numActiveConfigs = numActiveConfigs;
+    }
+
+    public void numActiveConfigsMinusOne() {
+        this.numActiveConfigs--;
+    }
+    public void numActiveConfigsPlusOne() {
+        this.numActiveConfigs++;
     }
 
     public Integer getUser_id() {
@@ -115,12 +117,12 @@ public class Member {
         this.food_preferences = food_preferences;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String full_name) {
+        this.fullName = full_name;
     }
 
     public String getEmail() {
@@ -147,29 +149,29 @@ public class Member {
         this.availability = availability;
     }
 
-    public int getNum_active_configs() {
-        return num_active_configs;
+    public int getNumActiveConfigs() {
+        return numActiveConfigs;
     }
 
-    public void setNum_active_configs(int num_active_configs) {
-        this.num_active_configs = num_active_configs;
+    public void setNumActiveConfigs(int num_active_configs) {
+        this.numActiveConfigs = num_active_configs;
     }
 
     @Override
     public String toString() {
-        return "Member{" + full_name;
-        /*
+        //return "Member{" + fullName;
+
         return "Member{" +
                 "user_id=" + user_id +
                 ", food_preferences=" + food_preferences +
-                ", full_name='" + full_name + '\'' +
+                ", full_name='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", membersMet=" + membersMet +
                 ", availability=" + availability +
-                ", num_active_configs=" + num_active_configs +
+                ", num_active_configs=" + numActiveConfigs +
                 '}';
 
-         */
+
     }
 }
 

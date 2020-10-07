@@ -51,33 +51,19 @@ public class EventTree {
                         // Uncomment to hide member data when printing output
                         // member = ''
 
-                        ////////member.num_active_configs += 1
+                        member.numActiveConfigsPlusOne();
 
                         if(masterArray.get(restaurantKey).get(dayOfWeekKey).get(timeOfDayKey) == null){
                             masterArray.get(restaurantKey).get(dayOfWeekKey).put(timeOfDayKey, new HashMap());
                         }
 
                         masterArray.get(restaurantKey).get(dayOfWeekKey).get(timeOfDayKey).put(userId, new EventMemberAttending(userId, member, 0));
-//                        masterArray.put(
-//                            restaurantKey, new HashMap(){{
-//                                put(dayOfWeekKey, new HashMap(){{
-//                                    // TODO:  do not use "new HashMap".  need to find a way to update existing hashmap
-//                                    put(timeOfDayKey, new HashMap()/*
-//                                    {{
-//                                        put(userId, new EventMemberAttending(userId, member, 0));
-//
-//                                    }}
-//                                    */
-//                                    );
-//                                }});
-//                            }}
-//                        );
+
                     }
                 }
             }
-
-
         }
+
 
         //System.out.println(masterArray.toString());
 
@@ -89,11 +75,7 @@ public class EventTree {
 
         for(Map.Entry<String, HashMap<String, HashMap<String, HashMap<Integer, EventMemberAttending>>>> restaurantEntry : masterArray.entrySet()) {
 
-            //System.out.println(restaurantEntry.getValue().entrySet());
-
             for (Map.Entry<String, HashMap<String, HashMap<Integer, EventMemberAttending>>> dayOfWeekEntry : restaurantEntry.getValue().entrySet()) {
-                //System.out.println(dayOfWeekEntry.getValue());
-
 
                 for (Map.Entry<String, HashMap<Integer, EventMemberAttending>> timeOfDayEntry : dayOfWeekEntry.getValue().entrySet()) {
                     idCount++;
@@ -102,26 +84,7 @@ public class EventTree {
 
                     masterTree.put(
                             tempIdCount, new EventBranch(tempIdCount, 0, memberCount, timeOfDayEntry.getValue(), 0, restaurantEntry.getKey(), dayOfWeekEntry.getKey(), timeOfDayEntry.getKey())
-
-
-//                            tempIdCount, new HashMap<String, Object>(){{
-//                                put("configId", tempIdCount);
-//                                put("totalPmc", 0);
-//                                put("count", memberCount);
-//                                put("membersAttending", timeOfDayEntry.getValue());
-//                                put("totalNumActiveConfigs", 0);
-//                                put("foodType", restaurantEntry.getKey());
-//                                put("dayOfWeek", dayOfWeekEntry.getKey());
-//                                put("timeOfDay", timeOfDayEntry.getKey());
-//                            }}
-
-
                     );
-                    //System.out.println(masterTree.get(restaurantEntry.getKey()).get(dayOfWeekEntry.getKey()));
-                    //System.out.println(masterArray.get(restaurantEntry.getKey()).get(dayOfWeekEntry.getKey()).get(timeOfDayEntry.getKey()));
-//                    masterTree.get(restaurantEntry.getKey()).get(dayOfWeekEntry.getKey()).get(timeOfDayEntry.getKey()).put(
-//                            idCount,
-//                    );
 
 
                     System.out.println(masterTree.get(tempIdCount));
@@ -138,33 +101,18 @@ public class EventTree {
 
 
 
+        // TODO
+        //masterArray.update_all_pmc_values()
+        //masterArray.calculate_configs(max_active_configs)
+        //masterArray.update_all_pmc_values()
+        //masterArray.sort_all_configs_by_count(sort_decreasing=False)
 
-
-
-
+        //final_array = masterArray.get_final_array()
 
 
         masterArray = null;
-/*
-        for i, member in active_members_list.items():
-        user_id = member.user_id
-            #print('userid:  ',user_id)
-        food_preferences = member.get_food_preferences()
 
-        member_availability = member.get_availability()
-
-
-            # This was the old traverse deep nested tree format
-        for restaurantkey in food_preferences:
-        for dayofweekkey, dayofweek in member_availability.items():
-        for timeofdaykey in dayofweek:
-
-                        # TODO:  remove the next line
-                        #member = ''
-        masterArray[restaurantkey][dayofweekkey][timeofdaykey].update({user_id: {'user_id': user_id, 'member_data': member, 'pmc': 0}})
-        member.num_active_configs += 1
-        */
-
+        this.configTree = masterTree;
 
     }
 
