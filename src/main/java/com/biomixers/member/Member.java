@@ -2,13 +2,16 @@ package com.biomixers.member;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 
 @Entity
 @Table(name = "members")
 //@TypeDefs(@TypeDef(name = "string-array", typeClass = StringArrayType.class))
-public class Member {
+
+// TODO:  Should this be serializable???
+public class Member implements Serializable {
 
 
 
@@ -21,7 +24,7 @@ public class Member {
     //@Column(columnDefinition = "text[]")
     @ElementCollection
     @CollectionTable(name ="food_preferences")
-    private List<String> food_preferences;
+    private List<String> food_preferences = new ArrayList<>();
 
 
     @Column(name = "full_name")
@@ -38,7 +41,7 @@ public class Member {
     //@Column(name="members_met", nullable = true)
     @ElementCollection
     @CollectionTable(name ="members_met")
-    private List<Integer> membersMet;
+    private List<Integer> membersMet = new ArrayList<>();
     //private List<Integer> membersMet;
 
     //@Column(length=10000)
@@ -46,7 +49,7 @@ public class Member {
     //@Convert(converter = HashMapConverter.class)
     @ElementCollection
     @CollectionTable(name ="availability")
-    private Map<String, String[]> availability;
+    private Map<String, String[]> availability = new HashMap<>();
 
     @Column(name = "num_active_configs")
     private int numActiveConfigs;

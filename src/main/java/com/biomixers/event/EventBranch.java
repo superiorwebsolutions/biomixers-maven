@@ -6,7 +6,7 @@ public class EventBranch {
     int configId;
     int totalPmc;
     int count;
-    HashMap<Integer, EventMemberAttending> membersAttending;
+    HashMap<Integer, EventMemberAttending> membersAttending = new HashMap<>();
     int totalNumActiveConfigs;
     String foodType;
     String dayOfWeek;

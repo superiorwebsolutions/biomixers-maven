@@ -1,6 +1,8 @@
-package com.biomixers.member;
+package com.biomixers.loader;
 
 import com.biomixers.MemberDaoServiceCommandLineRunner;
+import com.biomixers.member.Member;
+import com.biomixers.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -42,7 +44,7 @@ public class DataLoader implements ApplicationRunner {
 
 
         if(member != null){
-            memberRepository.save(member);
+            member = memberRepository.save(member);
             log.info("New member is created: " + member);
         }
 
