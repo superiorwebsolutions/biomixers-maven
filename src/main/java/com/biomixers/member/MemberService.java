@@ -1,7 +1,7 @@
 package com.biomixers.member;
 
-import com.biomixers.HelperFunctions;
-import com.biomixers.event.EventTree;
+import com.biomixers.util.HelperFunctions;
+import com.biomixers.event.EventCollection;
 import com.biomixers.filter.SearchFilterQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,7 +143,7 @@ public class MemberService {
 
 
         }
-        EventTree eventTree = new EventTree(members);
+        EventCollection eventCollection = new EventCollection(members);
         return members;
     }
 

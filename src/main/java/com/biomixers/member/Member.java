@@ -162,8 +162,10 @@ public class Member implements Serializable {
 
     @Override
     public String toString() {
-        //return "Member{" + fullName;
+        return "Member{full_name=" + fullName +
+        '}';
 
+        /*
         return "Member{" +
                 "user_id=" + user_id +
                 ", food_preferences=" + food_preferences +
@@ -173,6 +175,8 @@ public class Member implements Serializable {
                 ", availability=" + availability +
                 ", num_active_configs=" + numActiveConfigs +
                 '}';
+
+         */
 
 
     }

@@ -1,8 +1,11 @@
 package com.biomixers.loader;
 
-import com.biomixers.MemberDaoServiceCommandLineRunner;
+//import com.biomixers.MemberDaoServiceCommandLineRunner;
+import com.biomixers.event.EventCollection;
 import com.biomixers.member.Member;
+import com.biomixers.member.MemberController;
 import com.biomixers.member.MemberRepository;
+import com.biomixers.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,10 +19,14 @@ import java.util.*;
 @Component
 public class DataLoader implements ApplicationRunner {
 
+    @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MemberController memberController;
+
     private static final Logger log =
-            LoggerFactory.getLogger(MemberDaoServiceCommandLineRunner.class);
+            LoggerFactory.getLogger(DataLoader.class);
 
     @Autowired
     public DataLoader(MemberRepository userRepository) {
@@ -45,8 +52,14 @@ public class DataLoader implements ApplicationRunner {
 
         if(member != null){
             member = memberRepository.save(member);
-            log.info("New member is created: " + member);
+            ////////log.info("New member is created: " + member);
         }
+
+        memberController.generateSampleData();
+
+
+
+
 
 
     }

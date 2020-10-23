@@ -1,8 +1,9 @@
 package com.biomixers.event;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class EventBranch {
+public class Event implements Serializable {
     int configId;
     int totalPmc;
     int count;
@@ -12,11 +13,11 @@ public class EventBranch {
     String dayOfWeek;
     String timeOfDay;
 
-    public EventBranch(){
+    public Event(){
 
     }
 
-    public EventBranch(int configId, int totalPmc, int count, HashMap<Integer, EventMemberAttending> membersAttending, int totalNumActiveConfigs, String foodType, String dayOfWeek, String timeOfDay) {
+    public Event(int configId, int totalPmc, int count, HashMap<Integer, EventMemberAttending> membersAttending, int totalNumActiveConfigs, String foodType, String dayOfWeek, String timeOfDay) {
         super();
         this.configId = configId;
         this.totalPmc = totalPmc;
@@ -94,7 +95,7 @@ public class EventBranch {
 
     @Override
     public String toString() {
-        return "EventBranch{" +
+        return "Event{" +
                 "configId=" + configId +
                 ", totalPmc=" + totalPmc +
                 ", count=" + count +

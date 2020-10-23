@@ -1,23 +1,27 @@
 package com.biomixers.event;
 
 import com.biomixers.member.Member;
+import com.biomixers.util.HelperFunctions;
+import org.hibernate.id.uuid.Helper;
 
 import java.util.*;
 
-public class EventTree {
+public class EventCollection {
 
     List<Member> membersList = new ArrayList<>();
-    HashMap<Integer, EventBranch> configTree = new HashMap<>();
+    Map<Integer, Event> configTree = new HashMap<>();
 
-    public EventTree(){
+    public EventCollection(){
 
     }
 
 
-    public EventTree(List<Member> membersList) {
+    public EventCollection(List<Member> membersList) {
         this.membersList = membersList;
 
-        HashMap<Integer, EventBranch> masterTree = new HashMap<>();
+        // Generate nested HashMap for all possible event configurations
+
+        HashMap<Integer, Event> masterTree = new HashMap<>();
 
         HashMap<String, HashMap<String, HashMap<String, HashMap<Integer, EventMemberAttending>>>> masterArray = new HashMap<>();
 
@@ -69,7 +73,7 @@ public class EventTree {
 
 
 
-
+        // Populate configTree HashMap of Events
         int idCount = 0;
         ////System.out.println(masterArray.toString());
 
@@ -83,12 +87,12 @@ public class EventTree {
                     int memberCount = timeOfDayEntry.getValue().size();
 
                     masterTree.put(
-                            tempIdCount, new EventBranch(tempIdCount, 0, memberCount, timeOfDayEntry.getValue(), 0, restaurantEntry.getKey(), dayOfWeekEntry.getKey(), timeOfDayEntry.getKey())
+                            tempIdCount, new Event(tempIdCount, 0, memberCount, timeOfDayEntry.getValue(), 0, restaurantEntry.getKey(), dayOfWeekEntry.getKey(), timeOfDayEntry.getKey())
                     );
 
 
-                    System.out.println(masterTree.get(tempIdCount));
-                    System.out.println();
+                    //////System.out.println(masterTree.get(tempIdCount));
+                    //////System.out.println();
 
                 }
 
@@ -189,12 +193,6 @@ public class EventTree {
                 }
      */
 
-    public EventTree(List<Member> membersList, HashMap<Integer, EventBranch> configTree) {
-        super();
-        this.membersList = membersList;
-        this.configTree = configTree;
-    }
-
     public List<Member> getMembersList() {
         return membersList;
     }
@@ -203,19 +201,98 @@ public class EventTree {
         this.membersList = membersList;
     }
 
-    public HashMap<Integer, EventBranch> getConfigTree() {
+    public Map<Integer, Event> getConfigTree() {
         return configTree;
     }
 
-    public void setConfigTree(HashMap<Integer, EventBranch> configTree) {
+    public void setConfigTree(HashMap<Integer, Event> configTree) {
         this.configTree = configTree;
     }
 
+    public Event getEventById(Event event){
+        return this.configTree.get(event.configId);
+    }
+    public Event getEventById(int configId){
+        return this.configTree.get(configId);
+    }
+
+
+
+    public void updateAllPmcValues(){
+
+        for(Event event: this.getConfigTree().values() ){
+            int total_pmc = 0;
+
+            List<Integer> active_configs_list = new ArrayList<>();
+
+            HashMap<Integer, EventMemberAttending> members_attending = event.getMembersAttending();
+
+
+
+            for(EventMemberAttending eventMemberAttending : members_attending.values()){
+                Member member = eventMemberAttending.getMemberData();
+
+                List<Integer> prev_members_met = member.getMembersMet();
+
+                List<Integer> prev_members_met_intersection = new ArrayList<>(members_attending.keySet());
+                prev_members_met_intersection.retainAll(prev_members_met);
+
+                int prev_met_count = prev_members_met_intersection.size();
+
+                eventMemberAttending.setPmc(prev_met_count);
+
+                total_pmc += prev_met_count;
+
+                // TODO:  Change this to median active configs instead?  charge sorted alg too
+                active_configs_list.add(member.getNumActiveConfigs());
+            }
+
+            if(members_attending.size() > 0){
+                this.getEventById(event).setTotalPmc(total_pmc);
+
+                Collections.sort(active_configs_list);
+
+                this.getEventById(event).setTotalNumActiveConfigs(active_configs_list.get(active_configs_list.size() / 2));
+            }
+
+            // TODO:  Sort PMC and then num_active_configs
+            Map<Integer, EventMemberAttending> map = HelperFunctions.sortByValues(this.getEventById(1).getMembersAttending());
+            //System.out.println(map);
+            this.getEventById(1).setMembersAttending((HashMap<Integer, EventMemberAttending>) map);
+            break;
+
+
+        }
+
+    }
+/*
+    public String toString() {
+        Map map = configTree;
+        StringBuilder sb = new StringBuilder();
+        Iterator<Map.Entry<Integer, Event>> iter = map.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Integer, Event> entry = iter.next();
+            sb.append(entry.getKey());
+            sb.append('=').append('"');
+            sb.append(entry.getValue());
+            sb.append('"');
+            if (iter.hasNext()) {
+                sb.append(',').append(' ');
+            }
+        }
+        return sb.toString();
+
+    }
+
+ */
+
     @Override
     public String toString() {
-        return "EventTree{" +
-                "membersList=" + membersList +
-                ", configTree=" + configTree +
+
+        return "EventCollection{" +
+                "configTree=" + configTree +
                 '}';
     }
 }
+
+
