@@ -35,6 +35,8 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args) {
 
+        /*
+
         List<Integer> list = Arrays.asList(33, 45, 66);
         List<String> food_preferences = Arrays.asList("American", "Mexican");
 
@@ -55,8 +57,10 @@ public class DataLoader implements ApplicationRunner {
             ////////log.info("New member is created: " + member);
         }
 
-        memberController.generateSampleData();
 
+         */
+
+        memberController.generateSampleData();
 
 
 

@@ -2,9 +2,10 @@ package com.biomixers.event;
 
 import com.biomixers.member.Member;
 import com.biomixers.util.HelperFunctions;
-import org.hibernate.id.uuid.Helper;
+import org.hibernate.annotations.Check;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EventCollection {
 
@@ -16,11 +17,17 @@ public class EventCollection {
     }
 
 
-    public EventCollection(List<Member> membersList) {
+    public EventCollection(List<Member> originalMembersList){
+        List<Member> membersList = new ArrayList<>();
+
+        // Clone original members list so it's not affected when new EventCollections are created
+        for(Member member : originalMembersList){
+            membersList.add(member.clone());
+        }
+
         this.membersList = membersList;
 
         // Generate nested HashMap for all possible event configurations
-
         HashMap<Integer, Event> masterTree = new HashMap<>();
 
         HashMap<String, HashMap<String, HashMap<String, HashMap<Integer, EventMemberAttending>>>> masterArray = new HashMap<>();
@@ -220,16 +227,18 @@ public class EventCollection {
 
     public void updateAllPmcValues(){
 
+        ////System.out.println(HelperFunctions.getEvent(this).getMembersAttending().get(new Integer(10)));
+
         for(Event event: this.getConfigTree().values() ){
             int total_pmc = 0;
+
 
             List<Integer> active_configs_list = new ArrayList<>();
 
             HashMap<Integer, EventMemberAttending> members_attending = event.getMembersAttending();
 
-
-
             for(EventMemberAttending eventMemberAttending : members_attending.values()){
+
                 Member member = eventMemberAttending.getMemberData();
 
                 List<Integer> prev_members_met = member.getMembersMet();
@@ -251,19 +260,74 @@ public class EventCollection {
                 this.getEventById(event).setTotalPmc(total_pmc);
 
                 Collections.sort(active_configs_list);
-
-                this.getEventById(event).setTotalNumActiveConfigs(active_configs_list.get(active_configs_list.size() / 2));
+                this.getEventById(event).setMedianNumActiveConfigs(active_configs_list.get(active_configs_list.size() / 2));
             }
 
             // TODO:  Sort PMC and then num_active_configs
-            Map<Integer, EventMemberAttending> map = HelperFunctions.sortByValues(this.getEventById(1).getMembersAttending());
-            //System.out.println(map);
-            this.getEventById(1).setMembersAttending((HashMap<Integer, EventMemberAttending>) map);
-            break;
+
+            Map<Integer, EventMemberAttending> map = HelperFunctions.sortByValues(this.getEventById(event.getConfigId()).getMembersAttending());
+
+
+
+            this.getEventById(event.getConfigId()).setMembersAttending((HashMap<Integer, EventMemberAttending>) map);
 
 
         }
 
+
+
+    }
+
+    public void calculateConfigs(int maxActiveConfigs){
+        List<Integer> deleteTheseKeysFromDict = new ArrayList<>();
+
+        int count = 0;
+
+        for(Event event: this.getConfigTree().values() ){
+
+            Integer configId = event.getConfigId();
+            count += 1;
+
+            HashMap<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
+            int currentAttendingCount = membersAttending.size();
+
+//            TODO:  change this to while loop, while:  pmc > gvs.GLOBALS['MAX_NumberOfMembersMetAlreadyAllowance']) or (current_attending_count > gvs.GLOBALS['MAX_NumberOfMembersAllowedPerRestaurant']
+//            (sort members_attending by member.num_active_configs and pmc)
+            for(EventMemberAttending eventMemberAttending : membersAttending.values()) {
+
+                Member memberData = eventMemberAttending.getMemberData();
+
+                int pmc = eventMemberAttending.getPmc();
+
+                //if gvs.GLOBALS['debug']:
+                //    print('current_attending_count: ', current_attending_count)
+
+                //            Skip over any members who are on less than 2 total config_branches
+                //            Since this if statement is before the "MAX_NumberOfMembersMetAlreadyAllowance" check,
+                //                it's possible some event configs will have more than the max allowed.  this is handled in run_sorter() at the very end
+
+                if (memberData.getNumActiveConfigs() <= maxActiveConfigs)
+                    continue;
+
+                // TODO:  set up global variables
+                int MIN_NumberOfMembersAllowedPerRestaurant = 6;
+                if(currentAttendingCount <= MIN_NumberOfMembersAllowedPerRestaurant){
+                    // if DEBUG
+                    //print('Current attending count reached MIN_NumberOfMembersAllowedPerRestaurant ({})'.format(gvs.GLOBALS['MIN_NumberOfMembersAllowedPerRestaurant']))
+                    break;
+                }
+
+//                Check if member is still on any other configurations before deleting!
+//                    Current number of members attending this config
+
+
+                //TODO CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+            }
+
+
+        }
     }
 /*
     public String toString() {

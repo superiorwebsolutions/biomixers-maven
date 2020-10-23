@@ -1,6 +1,7 @@
 package com.biomixers.util;
 
 import com.biomixers.event.Event;
+import com.biomixers.event.EventCollection;
 import com.biomixers.event.EventMemberAttending;
 
 import java.lang.reflect.Array;
@@ -132,6 +133,19 @@ public class HelperFunctions {
     }
 
     public static Map<Integer, EventMemberAttending> sortByValues(Map<Integer, EventMemberAttending> map) {
+
+
+        // attempt to sort by pmc and then numactiveconfigs (didn't work)
+        /*
+        map.entrySet().stream().sorted(Comparator.comparing(entry -> (((EventMemberAttending)((Map.Entry)entry).getValue()).getPmc()))
+                .thenComparing(entry -> (((EventMemberAttending)((Map.Entry)entry).getValue()).getNumActiveConfigs())))
+                .collect(Collectors.toList());
+        //System.out.println(map.get(1).hashCode());
+
+        return map;
+         */
+
+
         List list = new LinkedList(map.entrySet());
         // Defined Custom Comparator here
         Collections.sort(list, new Comparator() {
@@ -153,6 +167,7 @@ public class HelperFunctions {
 //                        .compareTo(((Map.Entry) (o2)).getValue());
 
             }
+
         });
 
         // Here I am copying the sorted list in HashMap
@@ -163,6 +178,13 @@ public class HelperFunctions {
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
         return sortedHashMap;
+
+
+
+    }
+
+    public static Event getEvent(EventCollection temp){
+        return temp.getEventById(1);
     }
 
 

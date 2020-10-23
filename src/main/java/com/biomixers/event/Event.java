@@ -7,23 +7,27 @@ public class Event implements Serializable {
     int configId;
     int totalPmc;
     int count;
-    HashMap<Integer, EventMemberAttending> membersAttending = new HashMap<>();
-    int totalNumActiveConfigs;
+
+
+    // totalNumActiveConfigs is actually the median
+    int medianNumActiveConfigs;
     String foodType;
     String dayOfWeek;
     String timeOfDay;
+
+    HashMap<Integer, EventMemberAttending> membersAttending = new HashMap<>();
 
     public Event(){
 
     }
 
-    public Event(int configId, int totalPmc, int count, HashMap<Integer, EventMemberAttending> membersAttending, int totalNumActiveConfigs, String foodType, String dayOfWeek, String timeOfDay) {
+    public Event(int configId, int totalPmc, int count, HashMap<Integer, EventMemberAttending> membersAttending, int medianNumActiveConfigs, String foodType, String dayOfWeek, String timeOfDay) {
         super();
         this.configId = configId;
         this.totalPmc = totalPmc;
         this.count = count;
         this.membersAttending = membersAttending;
-        this.totalNumActiveConfigs = totalNumActiveConfigs;
+        this.medianNumActiveConfigs = medianNumActiveConfigs;
         this.foodType = foodType;
         this.dayOfWeek = dayOfWeek;
         this.timeOfDay = timeOfDay;
@@ -61,12 +65,12 @@ public class Event implements Serializable {
         this.membersAttending = membersAttending;
     }
 
-    public int getTotalNumActiveConfigs() {
-        return totalNumActiveConfigs;
+    public int getMedianNumActiveConfigs() {
+        return medianNumActiveConfigs;
     }
 
-    public void setTotalNumActiveConfigs(int totalNumActiveConfigs) {
-        this.totalNumActiveConfigs = totalNumActiveConfigs;
+    public void setMedianNumActiveConfigs(int medianNumActiveConfigs) {
+        this.medianNumActiveConfigs = medianNumActiveConfigs;
     }
 
     public String getFoodType() {
@@ -93,17 +97,4 @@ public class Event implements Serializable {
         this.timeOfDay = timeOfDay;
     }
 
-    @Override
-    public String toString() {
-        return "Event{" +
-                "configId=" + configId +
-                ", totalPmc=" + totalPmc +
-                ", count=" + count +
-                ", membersAttending=" + membersAttending +
-                ", totalNumActiveConfigs=" + totalNumActiveConfigs +
-                ", foodType=" + foodType +
-                ", dayOfWeek='" + dayOfWeek + '\'' +
-                ", timeOfDay='" + timeOfDay + '\'' +
-                '}';
-    }
 }

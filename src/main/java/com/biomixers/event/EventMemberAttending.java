@@ -20,6 +20,9 @@ public class EventMemberAttending {
         this.pmc = pmc;
     }
 
+
+
+
     public int getUserId() {
         return userId;
     }
@@ -34,6 +37,10 @@ public class EventMemberAttending {
 
     public void setMemberData(Member memberData) {
         this.memberData = memberData;
+    }
+
+    public int getNumActiveConfigs(){
+        return this.memberData.getNumActiveConfigs();
     }
 
     public int getPmc() {
@@ -51,7 +58,7 @@ public class EventMemberAttending {
     public void setMemberName(String memberName) {
         this.memberName = memberName;
     }
-
+/*
     @Override
     public String toString() {
         return "EventMemberAttending{" +
@@ -61,4 +68,6 @@ public class EventMemberAttending {
                 ", pmc=" + pmc +
                 '}';
     }
+
+ */
 }

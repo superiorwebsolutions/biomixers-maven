@@ -143,7 +143,7 @@ public class MemberService {
 
 
         }
-        EventCollection eventCollection = new EventCollection(members);
+
         return members;
     }
 

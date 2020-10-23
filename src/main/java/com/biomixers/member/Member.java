@@ -1,6 +1,8 @@
 package com.biomixers.member;
 
 
+import org.aspectj.weaver.ast.Test;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -11,7 +13,7 @@ import java.util.*;
 //@TypeDefs(@TypeDef(name = "string-array", typeClass = StringArrayType.class))
 
 // TODO:  Should this be serializable???
-public class Member implements Serializable {
+public class Member implements Serializable, Cloneable {
 
 
 
@@ -53,6 +55,19 @@ public class Member implements Serializable {
 
     @Column(name = "num_active_configs")
     private int numActiveConfigs;
+
+    public Member clone()
+    {
+        // Assign the shallow copy to new reference variable t
+        try {
+            return (Member) super.clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            return null;
+        }
+
+    }
 
     protected Member(){
 
