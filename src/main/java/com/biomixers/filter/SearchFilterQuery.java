@@ -1,10 +1,11 @@
 package com.biomixers.filter;
 
 public class SearchFilterQuery {
-    private int minAllowedPerRestaurant = 6;
-    private int maxAllowedPerRestaurant = 14;
+    private int minAllowedPerRestaurant = 4;
+    private int maxAllowedPerRestaurant = 15;
     private int numDaysOfAvailability = 4;
     private int numFoodPreferences = 3;
+    private int maxNumberOfMembersMetAllowance = 100;
     private float percentageOfMembersMet = 0.25f;
     private boolean randomizeResults = false;
 
@@ -13,7 +14,7 @@ public class SearchFilterQuery {
     }
 
 
-    public SearchFilterQuery(int minAllowedPerRestaurant, int maxAllowedPerRestaurant, int numDaysOfAvailability, int numFoodPreferences, float percentageOfMembersMet, boolean randomizeResults) {
+    public SearchFilterQuery(int minAllowedPerRestaurant, int maxAllowedPerRestaurant, int numDaysOfAvailability, int numFoodPreferences, int maxNumberOfMembersMetAllowance, float percentageOfMembersMet, boolean randomizeResults) {
         super();
         this.minAllowedPerRestaurant = minAllowedPerRestaurant;
         this.maxAllowedPerRestaurant = maxAllowedPerRestaurant;
@@ -21,6 +22,7 @@ public class SearchFilterQuery {
         this.numFoodPreferences = numFoodPreferences;
         this.percentageOfMembersMet = percentageOfMembersMet;
         this.randomizeResults = randomizeResults;
+        this.maxNumberOfMembersMetAllowance = maxNumberOfMembersMetAllowance;
     }
 
     public int getMinAllowedPerRestaurant() {
@@ -55,6 +57,14 @@ public class SearchFilterQuery {
         this.numFoodPreferences = numFoodPreferences;
     }
 
+    public int getMaxNumberOfMembersMetAllowance() {
+        return maxNumberOfMembersMetAllowance;
+    }
+
+    public void setMaxNumberOfMembersMetAllowance(int maxNumberOfMembersMetAllowance) {
+        this.maxNumberOfMembersMetAllowance = maxNumberOfMembersMetAllowance;
+    }
+
     public float getPercentageOfMembersMet() {
         return percentageOfMembersMet;
     }
@@ -78,6 +88,7 @@ public class SearchFilterQuery {
                 ", maxAllowedPerRestaurant=" + maxAllowedPerRestaurant +
                 ", numDaysOfAvailability=" + numDaysOfAvailability +
                 ", numFoodPreferences=" + numFoodPreferences +
+                ", maxNumberOfMembersMetAllowance=" + maxNumberOfMembersMetAllowance +
                 ", percentageOfMembersMet=" + percentageOfMembersMet +
                 ", randomizeResults=" + randomizeResults +
                 '}';

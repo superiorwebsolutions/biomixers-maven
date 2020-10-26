@@ -51,6 +51,8 @@ public class EventMemberAttending {
         this.pmc = pmc;
     }
 
+    public void pmcMinusOne(){ this.pmc -= 1; }
+
     public String getMemberName() {
         return memberName;
     }

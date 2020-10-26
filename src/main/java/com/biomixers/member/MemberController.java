@@ -19,33 +19,9 @@ public class MemberController {
     @Autowired
     private MemberRepository memberRepository;
 
-    private SearchFilterQuery searchFilterQuery;
 
 
-    @PostMapping("/filter")
-    public ResponseEntity<SearchFilterQuery> filterResults(@RequestBody SearchFilterQuery filter) {
 
-                /*
-    // USE THIS FOR TESTING THE POST
-    {
-"minAllowedPerRestaurant": 6,
-"maxAllowedPerRestaurant": 12,
-"numDaysOfAvailability": 3,
-"numFoodPreferences": 3,
-  "randomizeResults": false
-}
-     */
-
-
-        // TODO:  Should I be storing this query somewhere else, and then referencing it in getMembers()?
-        searchFilterQuery = filter;
-        System.out.println(searchFilterQuery.toString());
-        generateSampleData();
-        getAllMembers();
-
-
-        return new ResponseEntity<SearchFilterQuery>(searchFilterQuery, HttpStatus.OK);
-    }
 
     @GetMapping("/add")
     public ResponseEntity<Member> addMember() {

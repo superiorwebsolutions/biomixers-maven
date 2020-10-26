@@ -132,7 +132,7 @@ public class HelperFunctions {
         return (int)(a[(n - 1) / 2] + a[n / 2]) / 2;
     }
 
-    public static Map<Integer, EventMemberAttending> sortByValues(Map<Integer, EventMemberAttending> map) {
+    public static void sortByPmcValues(Event event) {
 
 
         // attempt to sort by pmc and then numactiveconfigs (didn't work)
@@ -146,7 +146,7 @@ public class HelperFunctions {
          */
 
 
-        List list = new LinkedList(map.entrySet());
+        List list = new LinkedList(event.getMembersAttending().entrySet());
         // Defined Custom Comparator here
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {
@@ -177,15 +177,61 @@ public class HelperFunctions {
             Map.Entry entry = (Map.Entry) it.next();
             sortedHashMap.put(entry.getKey(), entry.getValue());
         }
-        return sortedHashMap;
+        event.setMembersAttending(sortedHashMap);
+        //return sortedHashMap;
 
 
+
+    }
+
+    public static void sortAllConfigsByCount(EventCollection eventCollection, boolean sortDecreasing){
+
+        List list = new LinkedList(eventCollection.getConfigTree().entrySet());
+        // Defined Custom Comparator here
+        Collections.sort(list, new Comparator() {
+            public int compare(Object o1, Object o2) {
+
+                // Sorts in ASCENDING order:  3, 6, 21
+//                After Sorting:
+//                5: {num_active_configs=3}
+//                4: {num_active_configs=6}
+//                11: {num_active_configs=21}
+                // TODO:  Change (HashMap) to Members object
+                // TODO:  Instead of casting here, change original HashMap instantiation to be nested (ie:  Map.Entry<String, HashMap<String>>)
+                if(sortDecreasing){
+
+                }
+                else{
+
+                }
+                return ((Comparable)((Event)((Map.Entry)o2).getValue()).getCount())
+                        .compareTo(((Event)((Map.Entry)o1).getValue()).getCount());
+
+
+
+//                return ((Comparable) ((Map.Entry) (o1)).getValue())
+//                        .compareTo(((Map.Entry) (o2)).getValue());
+
+            }
+
+        });
+
+        // Here I am copying the sorted list in HashMap
+        // using LinkedHashMap to preserve the insertion order
+        HashMap sortedHashMap = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry) it.next();
+            sortedHashMap.put(entry.getKey(), entry.getValue());
+        }
+        eventCollection.setConfigTree(sortedHashMap);
 
     }
 
     public static Event getEvent(EventCollection temp){
         return temp.getEventById(1);
     }
+
+
 
 
 

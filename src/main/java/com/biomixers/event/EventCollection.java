@@ -1,16 +1,19 @@
 package com.biomixers.event;
 
+import com.biomixers.BiomixersApplication;
 import com.biomixers.member.Member;
 import com.biomixers.util.HelperFunctions;
-import org.hibernate.annotations.Check;
+import javafx.util.Pair;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class EventCollection {
 
     List<Member> membersList = new ArrayList<>();
     Map<Integer, Event> configTree = new HashMap<>();
+
+
 
     public EventCollection(){
 
@@ -18,11 +21,14 @@ public class EventCollection {
 
 
     public EventCollection(List<Member> originalMembersList){
+        super();
+
         List<Member> membersList = new ArrayList<>();
 
         // Clone original members list so it's not affected when new EventCollections are created
         for(Member member : originalMembersList){
-            membersList.add(member.clone());
+            Member tempMember = member.clone();
+            membersList.add(tempMember);
         }
 
         this.membersList = membersList;
@@ -75,11 +81,6 @@ public class EventCollection {
             }
         }
 
-
-        //System.out.println(masterArray.toString());
-
-
-
         // Populate configTree HashMap of Events
         int idCount = 0;
         ////System.out.println(masterArray.toString());
@@ -96,109 +97,17 @@ public class EventCollection {
                     masterTree.put(
                             tempIdCount, new Event(tempIdCount, 0, memberCount, timeOfDayEntry.getValue(), 0, restaurantEntry.getKey(), dayOfWeekEntry.getKey(), timeOfDayEntry.getKey())
                     );
-
-
-                    //////System.out.println(masterTree.get(tempIdCount));
-                    //////System.out.println();
-
                 }
-
-
             }
         }
-
-
-        //System.out.println(masterTree.toString());
-
-
-
-        // TODO
-        //masterArray.update_all_pmc_values()
-        //masterArray.calculate_configs(max_active_configs)
-        //masterArray.update_all_pmc_values()
-        //masterArray.sort_all_configs_by_count(sort_decreasing=False)
-
-        //final_array = masterArray.get_final_array()
-
 
         masterArray = null;
 
         this.configTree = masterTree;
 
+
+
     }
-
-    // TODO:  FIGURE OUT HOW TO MAKE THIS SORT BY num_active_configs values
-    // TODO:  has something to do with getting (Map.Entry) (o2)).getValue().getValue()
-    // TODO:  test code block here:  https://leetcode.com/playground/new/empty
-    /*
-    public class HMapSortingByValues {
-  public static void main(String[] args) {
-      HashMap<Integer, HashMap> hmap = new HashMap<Integer, HashMap>();
-      hmap.put(5, new HashMap<String, Integer>() {{
-    put("num_active_configs", 3);
-}});
-      hmap.put(11, new HashMap<String, Integer>() {{
-    put("num_active_configs", 21);
-}});
-
-      hmap.put(4, new HashMap<String, Integer>() {{
-    put("num_active_configs", 6);
-}});
-
-      System.out.println("Before Sorting:");
-    Set set = hmap.entrySet();
-    Iterator iterator = set.iterator();
-      while(iterator.hasNext()) {
-        Map.Entry me = (Map.Entry)iterator.next();
-        System.out.print(me.getKey() + ": ");
-        System.out.println(me.getValue());
-    }
-    Map<Integer, HashMap> map = sortByValues(hmap);
-      System.out.println("After Sorting:");
-    Set set2 = map.entrySet();
-    Iterator iterator2 = set2.iterator();
-      while(iterator2.hasNext()) {
-        Map.Entry me2 = (Map.Entry)iterator2.next();
-        System.out.print(me2.getKey() + ": ");
-        System.out.println(me2.getValue());
-    }
-}
-
-    private static HashMap sortByValues(HashMap map) {
-        List list = new LinkedList(map.entrySet());
-        // Defined Custom Comparator here
-        Collections.sort(list, new Comparator() {
-            public int compare(Object o1, Object o2) {
-
-
-                // Sorts in ASCENDING order:  3, 6, 21
-//                After Sorting:
-//                5: {num_active_configs=3}
-//                4: {num_active_configs=6}
-//                11: {num_active_configs=21}
-                 // TODO:  Change (HashMap) to Members object
-                 // TODO:  Instead of casting here, change original HashMap instantiation to be nested (ie:  Map.Entry<String, HashMap<String>>)
-                 return ((Comparable) ((HashMap)(((Map.Entry)o1).getValue())).get("num_active_configs"))
-                        .compareTo(((HashMap)(((Map.Entry)o2).getValue())).get("num_active_configs"));
-
-
-//                return ((Comparable) ((Map.Entry) (o1)).getValue())
-//                        .compareTo(((Map.Entry) (o2)).getValue());
-
-}
-        });
-
-                // Here I am copying the sorted list in HashMap
-                // using LinkedHashMap to preserve the insertion order
-                HashMap sortedHashMap = new LinkedHashMap();
-                for (Iterator it = list.iterator(); it.hasNext();) {
-                Map.Entry entry = (Map.Entry) it.next();
-                sortedHashMap.put(entry.getKey(), entry.getValue());
-                }
-                return sortedHashMap;
-                }
-                }
-     */
 
     public List<Member> getMembersList() {
         return membersList;
@@ -216,11 +125,22 @@ public class EventCollection {
         this.configTree = configTree;
     }
 
+    public void removeEvent(int eventId){
+        this.configTree.remove(eventId);
+    }
+
     public Event getEventById(Event event){
         return this.configTree.get(event.configId);
     }
     public Event getEventById(int configId){
         return this.configTree.get(configId);
+    }
+    public Set<Integer> getMembersAsIntegerSet(){
+        Set<Integer> set = new HashSet<>();
+        for(Member member : this.membersList){
+            set.add(member.getUser_id());
+        }
+        return set;
     }
 
 
@@ -231,7 +151,6 @@ public class EventCollection {
 
         for(Event event: this.getConfigTree().values() ){
             int total_pmc = 0;
-
 
             List<Integer> active_configs_list = new ArrayList<>();
 
@@ -265,23 +184,68 @@ public class EventCollection {
 
             // TODO:  Sort PMC and then num_active_configs
 
-            Map<Integer, EventMemberAttending> map = HelperFunctions.sortByValues(this.getEventById(event.getConfigId()).getMembersAttending());
+            //Map<Integer, EventMemberAttending> map = HelperFunctions.sortByPmcValues(this.getEventById(event.getConfigId()).getMembersAttending());
 
-
-
-            this.getEventById(event.getConfigId()).setMembersAttending((HashMap<Integer, EventMemberAttending>) map);
-
-
+            //this.getEventById(event.getConfigId()).setMembersAttending((HashMap<Integer, EventMemberAttending>) map);
+            HelperFunctions.sortByPmcValues(event);
         }
-
-
-
     }
 
+
+
+
+
+
+
+    public void deleteMemberFromAllConfigs(int userId, int startingConfigId){
+        int count = 0;
+
+        for(Event event : this.configTree.values()){
+            int configId = event.getConfigId();
+
+            System.out.println("attempting - Remove member " + userId + " from event " + configId);
+
+
+            if(count == 0){
+                count += 1;
+                if(configId != startingConfigId){
+                    System.out.println("starting_config_id: " + startingConfigId);
+                    System.out.println("KEY != STARTING_CONFIG_ID");
+                    //System.exit(0);
+                }
+                continue;
+            }
+            else {
+
+
+                if (this.configTree.get(configId).getMembersAttending().keySet().contains(userId)) {
+                    this.configTree.get(configId).countMinusOne();
+                    this.configTree.get(configId).getMembersAttending().get(userId).getMemberData().numActiveConfigsMinusOne();
+                    this.configTree.get(configId).removeMemberFromAttending(userId);
+                    System.out.println("deleteMemberFromAllConfigs - Remove member " + userId + " from event " + configId);
+                }
+                count += 1;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public void calculateConfigs(int maxActiveConfigs){
-        List<Integer> deleteTheseKeysFromDict = new ArrayList<>();
+        List<Pair> deleteTheseKeysFromDict = new ArrayList<>();
 
         int count = 0;
+
+
 
         for(Event event: this.getConfigTree().values() ){
 
@@ -294,6 +258,8 @@ public class EventCollection {
 //            TODO:  change this to while loop, while:  pmc > gvs.GLOBALS['MAX_NumberOfMembersMetAlreadyAllowance']) or (current_attending_count > gvs.GLOBALS['MAX_NumberOfMembersAllowedPerRestaurant']
 //            (sort members_attending by member.num_active_configs and pmc)
             for(EventMemberAttending eventMemberAttending : membersAttending.values()) {
+
+                int userId = eventMemberAttending.getUserId();
 
                 Member memberData = eventMemberAttending.getMemberData();
 
@@ -309,9 +275,9 @@ public class EventCollection {
                 if (memberData.getNumActiveConfigs() <= maxActiveConfigs)
                     continue;
 
-                // TODO:  set up global variables
-                int MIN_NumberOfMembersAllowedPerRestaurant = 6;
-                if(currentAttendingCount <= MIN_NumberOfMembersAllowedPerRestaurant){
+
+
+                if(currentAttendingCount <= BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant()){
                     // if DEBUG
                     //print('Current attending count reached MIN_NumberOfMembersAllowedPerRestaurant ({})'.format(gvs.GLOBALS['MIN_NumberOfMembersAllowedPerRestaurant']))
                     break;
@@ -319,36 +285,227 @@ public class EventCollection {
 
 //                Check if member is still on any other configurations before deleting!
 //                    Current number of members attending this config
+                if(pmc > BiomixersApplication.getSearchFilterQuery().getMaxNumberOfMembersMetAllowance() || currentAttendingCount > BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant()){
+                    // Deduct one from this member's num_active_configs
+                    memberData.numActiveConfigsMinusOne();
+
+                    // GET DEBUG STATEMENT FROM PYTHON
 
 
-                //TODO CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    for(EventMemberAttending m : membersAttending.values()){
+                        Member member = eventMemberAttending.getMemberData();
+                        int mUserId = m.getUserId();
+                        List<Integer> prevMembersMet = member.getMembersMet();
+
+                        if(prevMembersMet.contains(mUserId)){
+                            if(membersAttending.get(mUserId).getPmc() == 0){
+                                // raise Exception('PMC must be above zero.  config_id:{}, user_id:{}'.format(config_id, uid))
+                            }
+
+                            membersAttending.get(mUserId).pmcMinusOne();
+                        }
+                    }
+
+                    // Delete this member with highest pmc
+                    // INSERT DEBUG MESSAGE
+
+                    // Determine which config_branches to delete from master config_tree, and create a list of keys so we can delete after the loop
+                    //                    delete_these_keys_from_dict.append(user_id)
+                    deleteTheseKeysFromDict.add(new Pair<>(configId, userId));
+                    currentAttendingCount -= 1;
+
+                    event.setCount(currentAttendingCount);
+                    // Skip the below code and continue this loop
+                    //System.out.println(deleteTheseKeysFromDict.toString());
+
+                }
+                else{
+                    event.setCount(currentAttendingCount);
+                    break;
+                }
+            }
+        }
+
+        // This code only executes once we reach acceptable global values for PMC and current_attending_count
+        // Delete config_branches from master config_tree (decided in loop above)
+        if(deleteTheseKeysFromDict.size() > 0){
+            for(Pair elem : deleteTheseKeysFromDict){
+                int cid = (int) elem.getKey();
+                int uid = (int) elem.getValue();
+
+                // Print config_id, user_id, and num_active configs (for each member deleted from all lists)
+                HashMap<Integer, EventMemberAttending> membersAttending = this.getEventById(cid).getMembersAttending();
+
+                Event event = this.getEventById(cid);
+
+                event.removeMemberFromAttending(uid);
+                System.out.println("CalculateConfigs - Remove member " + uid + " from event " + cid);
+
+                // If this Event has less than MIN_NumberOfMembersAllowedPerRestaurant, update numActiveConfigs and remove this Event
+                if(membersAttending.size() <= BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant()){
+                    for(int userId : membersAttending.keySet()){// TODO:  set up global variables
+                        if(event.getMembersAttending().get(userId).getMemberData().getNumActiveConfigs() == 1){
+                            System.out.println("WARNING - User (" + userId + ") is no longer on any active Events after being deleted here");
+                        }
+
+                        event.getMembersAttending().get(userId).getMemberData().numActiveConfigsMinusOne();
+                    }
+
+                    System.out.println("REMOVE THIS CONFIG - HAS LESS THAN MINIMUM ALLOWED PER RESTAURANT");
+                    this.removeEvent(cid);
+                }
 
 
             }
+        }
 
+    }
+
+
+
+
+
+    public FinalEventCollection getFinalArray(){
+
+
+        EventCollection checkpoint = this;
+
+        FinalEventCollection finalEventCollection = new FinalEventCollection();
+
+        Map<Integer, Event> finalConfigTree = new HashMap<>();
+
+        List<Integer> placedMemberList = new ArrayList<>();
+
+        int configTreeLength = this.configTree.size();
+
+        Iterator it = this.configTree.entrySet().iterator();
+
+        Map.Entry i = (Map.Entry) it.next();
+        int configId = (int) i.getKey();
+        Event event = (Event) i.getValue();
+
+        //System.out.println("config_tree_size:  " + this.configTree.size());
+
+        int count = 0;
+
+        while(it.hasNext()){
+
+
+
+
+            System.out.println("eventId: " + configId);
+
+            if(count > configTreeLength - 2){
+                break;
+            }
+
+
+            HashMap<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
+
+            boolean skipUpdates = false;
+            if(membersAttending.size() == 0){
+                skipUpdates = true;
+                System.out.println("skipUpdates - 0 members attending");
+            }
+            else {
+
+                // if members_attending is >= min number allowed, then delete member from all other configs
+                if (membersAttending.size() >= BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant()) {
+                    Event newEvent = event.clone();
+                    finalConfigTree.put(configId, newEvent);
+                    System.out.println("PLACED EVENT IN finalConfigTree: " + configId);
+
+                    for (int userId : membersAttending.keySet()) {
+                        this.deleteMemberFromAllConfigs(userId, configId);
+                        placedMemberList.add(userId);
+                    }
+                }
+                // else, if members_attending is less than min number allowed, subtract 1 from num_active_configs
+                else {
+                    for (EventMemberAttending eventMemberAttending : membersAttending.values()) {
+                        int userId = eventMemberAttending.getUserId();
+                        this.configTree.get(configId).getMembersAttending().get(userId).getMemberData().numActiveConfigsMinusOne();
+
+                        skipUpdates = true;
+                    }
+                    System.out.println("delete Event, attending is less than MIN_NumberOfMembersAllowedPerRestaurant");
+                }
+
+                if (skipUpdates == false) {
+                    this.updateAllPmcValues();
+
+                    HelperFunctions.sortAllConfigsByCount(this, false);
+                }
+            }
+
+            this.removeEvent(configId);
+
+            it = this.configTree.entrySet().iterator();
+            i = (Map.Entry) it.next();
+            configId = (int) i.getKey();
+            event = (Event) i.getValue();
+
+
+            count += 1;
 
         }
-    }
-/*
-    public String toString() {
-        Map map = configTree;
-        StringBuilder sb = new StringBuilder();
-        Iterator<Map.Entry<Integer, Event>> iter = map.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<Integer, Event> entry = iter.next();
-            sb.append(entry.getKey());
-            sb.append('=').append('"');
-            sb.append(entry.getValue());
-            sb.append('"');
-            if (iter.hasNext()) {
-                sb.append(',').append(' ');
+
+
+
+        if(placedMemberList.size() == this.getMembersList().size()){
+            System.out.println("ALL MEMBERS PLACED SUCCESSFULLY");
+        }
+
+        int totalPmcForConfig = 0;
+
+        List<Integer> finalMemberList = new ArrayList<>();
+
+        for(Event config : finalConfigTree.values()){
+            totalPmcForConfig += config.getTotalPmc();
+
+            for(EventMemberAttending eventMemberAttending : config.getMembersAttending().values()){
+                int userId = eventMemberAttending.getUserId();
+                finalMemberList.add(userId);
             }
         }
-        return sb.toString();
+
+        System.out.println(finalMemberList.size() + " members placed of " + this.membersList.size());
+
+        Set<Integer> unplacedMembers = this.getMembersAsIntegerSet();
+        unplacedMembers.removeAll(finalMemberList);
+
+        System.out.println("Unplaced:  " + unplacedMembers.toString());
+
+        finalEventCollection.setConfigTree(finalConfigTree);
+        finalEventCollection.setHtmlNumUnplaced("Unplaced:  " + unplacedMembers.toString());
+        finalEventCollection.setHtmlPlaced(finalMemberList.size() + " members placed of " + this.membersList.size());
+        finalEventCollection.setTotalPmc(totalPmcForConfig);
+        finalEventCollection.setNumUnplacedInt(unplacedMembers.size());
+
+        return finalEventCollection;
 
     }
 
- */
+    public static FinalEventCollection runSorter(List<Member> membersList, int maxActiveConfigs){
+
+        EventCollection eventCollection = new EventCollection(membersList);
+
+        eventCollection.updateAllPmcValues();
+
+        HelperFunctions.sortAllConfigsByCount(eventCollection, false);
+
+        eventCollection.calculateConfigs(maxActiveConfigs);
+
+        eventCollection.updateAllPmcValues();
+
+        HelperFunctions.sortAllConfigsByCount(eventCollection, false);
+
+        FinalEventCollection finalEventCollection = eventCollection.getFinalArray();
+
+        return finalEventCollection;
+    }
+
+
 
     @Override
     public String toString() {

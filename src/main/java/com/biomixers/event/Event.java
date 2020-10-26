@@ -1,9 +1,11 @@
 package com.biomixers.event;
 
+import com.biomixers.member.Member;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class Event implements Serializable {
+public class Event implements Serializable, Cloneable {
     int configId;
     int totalPmc;
     int count;
@@ -33,6 +35,19 @@ public class Event implements Serializable {
         this.timeOfDay = timeOfDay;
     }
 
+    public Event clone()
+    {
+        // Assign the shallow copy to new reference variable t
+        try {
+            return (Event) super.clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            return null;
+        }
+
+    }
+
     public int getConfigId() {
         return configId;
     }
@@ -57,12 +72,18 @@ public class Event implements Serializable {
         this.count = count;
     }
 
+    public void countMinusOne(){ this.count -= 1; }
+
     public HashMap<Integer, EventMemberAttending> getMembersAttending() {
         return membersAttending;
     }
 
     public void setMembersAttending(HashMap<Integer, EventMemberAttending> membersAttending) {
         this.membersAttending = membersAttending;
+    }
+
+    public void removeMemberFromAttending(int userId){
+        this.membersAttending.remove(userId);
     }
 
     public int getMedianNumActiveConfigs() {

@@ -1,35 +1,83 @@
 package com.biomixers.event;
 
+import com.biomixers.BiomixersApplication;
+import com.biomixers.filter.SearchFilterQuery;
 import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
 import com.biomixers.util.HelperFunctions;
+import org.hibernate.id.uuid.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class EventController {
 
     @Autowired
-    MemberController memberController;
+    private MemberController memberController;
 
-    @GetMapping("/events")
-    public Map<Integer, Event> getEventCollection(){
-
+    private SearchFilterQuery searchFilterQuery;
 
 
-        EventCollection eventCollection = new EventCollection(memberController.getAllMembers());
-        eventCollection.updateAllPmcValues();
+    @GetMapping("/final")
+    public HashMap<Integer, FinalEventCollection> getFinalEventCollection(){
+
+        EventCollection eventCollection = new EventCollection();
+        List<Member> membersList = memberController.getAllMembers();
+
+        HashMap<Integer, FinalEventCollection> allRuns = new HashMap<>();
+
+        int maxRuns = 10;
+
+        BiomixersApplication.getSearchFilterQuery().setMinAllowedPerRestaurant(4);
+        BiomixersApplication.getSearchFilterQuery().setMaxAllowedPerRestaurant(15);
+
+        int membersMaxMinAllowedRange = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant() - BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant() - 2;
+
+        int numSteps = Math.round(maxRuns / membersMaxMinAllowedRange);
+
+        if(numSteps == 0)
+            numSteps = 1;
+
+        int descCount = 0;
+
+        int maxNumberOfMembersAllowedPerRestaurant = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant();
+
+        for(int i = 1; i < maxRuns + 1; i++){
+            int maxActiveConfigs = numSteps - descCount;
+
+            FinalEventCollection finalEventCollection = EventCollection.runSorter(membersList, maxActiveConfigs);
+            finalEventCollection.setMaxActiveConfigs(maxActiveConfigs);
+            finalEventCollection.setMaxMembersAllowedPerRestaurant(maxNumberOfMembersAllowedPerRestaurant);
+
+            allRuns.put(i, finalEventCollection);
+
+            descCount += 1;
+
+            if((float) i % numSteps == 0.0){
+                maxNumberOfMembersAllowedPerRestaurant -= 1;
+                descCount = 0;
+            }
+
+            // TODO:  slowly lower max_number_of_members_allowed_per_restaurant
+            // TODO:  slowly increase ['MAX_NumberOfMembersMetAlreadyAllowance'] (maybe?)
+
+            Set<String> temp = new HashSet<>();
 
 
+        }
 
-        return eventCollection.getConfigTree();
+        System.out.println(allRuns.toString());
+
+        for(Event event : eventCollection.getConfigTree().values()){
+            //System.out.println(event.getCount());
+        }
+
+
+        return allRuns;
     }
 
     @GetMapping("/event/{eventId}")
@@ -56,4 +104,30 @@ public class EventController {
     }
 
  */
+
+    // Put this in QueryController?
+    @PostMapping("/filter")
+    public ResponseEntity<SearchFilterQuery> filterResults(@RequestBody SearchFilterQuery filter) {
+
+                /*
+    // USE THIS FOR TESTING THE POST
+    {
+"minAllowedPerRestaurant": 6,
+"maxAllowedPerRestaurant": 12,
+"numDaysOfAvailability": 3,
+"numFoodPreferences": 3,
+  "randomizeResults": false
+}
+     */
+
+        EventCollection eventCollection = new EventCollection(memberController.getAllMembers());
+        //eventCollection.setSearchFilterQuery(filter);
+
+        System.out.println(searchFilterQuery.toString());
+        memberController.generateSampleData();
+        memberController.getAllMembers();
+
+
+        return new ResponseEntity<SearchFilterQuery>(searchFilterQuery, HttpStatus.OK);
+    }
 }

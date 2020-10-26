@@ -1,5 +1,6 @@
 package com.biomixers.member;
 
+import com.biomixers.BiomixersApplication;
 import com.biomixers.util.HelperFunctions;
 import com.biomixers.event.EventCollection;
 import com.biomixers.filter.SearchFilterQuery;
@@ -36,8 +37,8 @@ public class MemberService {
     }
 
     public List<Member> generateSampleData(){
-
-        searchFilterQuery = new SearchFilterQuery();
+        SearchFilterQuery searchFilterQuery = BiomixersApplication.getSearchFilterQuery();
+        //searchFilterQuery = new SearchFilterQuery();
 
         // USE http://localhost:8080/filter post to run /members
              /*
@@ -74,10 +75,7 @@ public class MemberService {
             allMemberIds[i] = members.get(i).getUser_id();
         }
 
-
-
         for (Member member: members){
-
             ArrayList<String> avail_options = new ArrayList<>();
             avail_options.add("Breakfast");
             avail_options.add("Lunch");
@@ -116,10 +114,7 @@ public class MemberService {
             // Choose random sample of 25% of members_met
             ArrayList<Integer> list2 = (ArrayList<Integer>) HelperFunctions.randomSampleInt(list1, (int)(total_num_members * searchFilterQuery.getPercentageOfMembersMet()), seed);
 
-
             ArrayList<Integer> members_met = list2;
-
-
 
 
             // TODO:  Use searchFilterQuery.getNumFoodPreferences to figure out how many of these days to include

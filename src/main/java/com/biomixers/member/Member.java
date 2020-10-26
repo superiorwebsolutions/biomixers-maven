@@ -56,19 +56,6 @@ public class Member implements Serializable, Cloneable {
     @Column(name = "num_active_configs")
     private int numActiveConfigs;
 
-    public Member clone()
-    {
-        // Assign the shallow copy to new reference variable t
-        try {
-            return (Member) super.clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
-            return null;
-        }
-
-    }
-
     protected Member(){
 
     }
@@ -110,6 +97,19 @@ public class Member implements Serializable, Cloneable {
         this.membersMet = membersMet;
         this.availability = availability;
         this.numActiveConfigs = numActiveConfigs;
+    }
+
+    public Member clone()
+    {
+        // Assign the shallow copy to new reference variable t
+        try {
+            return (Member) super.clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            return null;
+        }
+
     }
 
     public void numActiveConfigsMinusOne() {
