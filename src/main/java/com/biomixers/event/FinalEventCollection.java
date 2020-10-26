@@ -2,6 +2,7 @@ package com.biomixers.event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FinalEventCollection {
 
@@ -87,6 +88,22 @@ public class FinalEventCollection {
 
     public void setMaxMembersAllowedPerRestaurant(int maxMembersAllowedPerRestaurant) {
         this.maxMembersAllowedPerRestaurant = maxMembersAllowedPerRestaurant;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FinalEventCollection that = (FinalEventCollection) o;
+        return totalPmc == that.totalPmc &&
+                numUnplacedInt == that.numUnplacedInt &&
+                Objects.equals(htmlNumUnplaced, that.htmlNumUnplaced) &&
+                Objects.equals(htmlPlaced, that.htmlPlaced);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(totalPmc, numUnplacedInt, htmlNumUnplaced, htmlPlaced);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.biomixers.filter;
 
 public class SearchFilterQuery {
-    private int minAllowedPerRestaurant = 4;
-    private int maxAllowedPerRestaurant = 15;
+    private int minAllowedPerRestaurant = 6;
+    private int maxAllowedPerRestaurant = 14;
     private int numDaysOfAvailability = 4;
     private int numFoodPreferences = 3;
     private int maxNumberOfMembersMetAllowance = 100;

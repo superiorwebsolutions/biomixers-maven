@@ -2,6 +2,7 @@ package com.biomixers.event;
 
 import com.biomixers.BiomixersApplication;
 import com.biomixers.member.Member;
+import com.biomixers.util.Constants;
 import com.biomixers.util.HelperFunctions;
 import javafx.util.Pair;
 
@@ -44,11 +45,6 @@ public class EventCollection {
             List<String> foodPreferences = member.getFood_preferences();
 
             Map<String, String[]> availability = member.getAvailability();
-
-
-            //System.out.println(member.toString());
-
-            //for(HashMap<String, HashMap<String, HashMap<String, HashMap<Integer, HashMap>>>>)
 
             // This was the old traverse deep nested tree format
             for(String restaurantKey : foodPreferences) {
@@ -147,7 +143,6 @@ public class EventCollection {
 
     public void updateAllPmcValues(){
 
-        ////System.out.println(HelperFunctions.getEvent(this).getMembersAttending().get(new Integer(10)));
 
         for(Event event: this.getConfigTree().values() ){
             int total_pmc = 0;
@@ -203,14 +198,18 @@ public class EventCollection {
         for(Event event : this.configTree.values()){
             int configId = event.getConfigId();
 
-            System.out.println("attempting - Remove member " + userId + " from event " + configId);
+            if(Constants.DEBUG)
+                System.out.println("attempting - Remove member " + userId + " from event " + configId);
 
 
             if(count == 0){
                 count += 1;
                 if(configId != startingConfigId){
-                    System.out.println("starting_config_id: " + startingConfigId);
-                    System.out.println("KEY != STARTING_CONFIG_ID");
+                    if(Constants.DEBUG){
+                        System.out.println("starting_config_id: " + startingConfigId);
+                        System.out.println("KEY != STARTING_CONFIG_ID");
+                    }
+                    // TODO:  uncomment this exit and see why this is happening
                     //System.exit(0);
                 }
                 continue;
@@ -222,7 +221,8 @@ public class EventCollection {
                     this.configTree.get(configId).countMinusOne();
                     this.configTree.get(configId).getMembersAttending().get(userId).getMemberData().numActiveConfigsMinusOne();
                     this.configTree.get(configId).removeMemberFromAttending(userId);
-                    System.out.println("deleteMemberFromAllConfigs - Remove member " + userId + " from event " + configId);
+                    if(Constants.DEBUG)
+                        System.out.println("deleteMemberFromAllConfigs - Remove member " + userId + " from event " + configId);
                 }
                 count += 1;
             }
@@ -315,9 +315,6 @@ public class EventCollection {
                     currentAttendingCount -= 1;
 
                     event.setCount(currentAttendingCount);
-                    // Skip the below code and continue this loop
-                    //System.out.println(deleteTheseKeysFromDict.toString());
-
                 }
                 else{
                     event.setCount(currentAttendingCount);
@@ -339,19 +336,22 @@ public class EventCollection {
                 Event event = this.getEventById(cid);
 
                 event.removeMemberFromAttending(uid);
-                System.out.println("CalculateConfigs - Remove member " + uid + " from event " + cid);
+                if(Constants.DEBUG)
+                    System.out.println("CalculateConfigs - Remove member " + uid + " from event " + cid);
 
                 // If this Event has less than MIN_NumberOfMembersAllowedPerRestaurant, update numActiveConfigs and remove this Event
                 if(membersAttending.size() <= BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant()){
                     for(int userId : membersAttending.keySet()){// TODO:  set up global variables
                         if(event.getMembersAttending().get(userId).getMemberData().getNumActiveConfigs() == 1){
-                            System.out.println("WARNING - User (" + userId + ") is no longer on any active Events after being deleted here");
+                            if(Constants.DEBUG)
+                                System.out.println("WARNING - User (" + userId + ") is no longer on any active Events after being deleted here");
                         }
 
                         event.getMembersAttending().get(userId).getMemberData().numActiveConfigsMinusOne();
                     }
 
-                    System.out.println("REMOVE THIS CONFIG - HAS LESS THAN MINIMUM ALLOWED PER RESTAURANT");
+                    if(Constants.DEBUG)
+                        System.out.println("REMOVE THIS CONFIG - HAS LESS THAN MINIMUM ALLOWED PER RESTAURANT");
                     this.removeEvent(cid);
                 }
 
@@ -384,16 +384,12 @@ public class EventCollection {
         int configId = (int) i.getKey();
         Event event = (Event) i.getValue();
 
-        //System.out.println("config_tree_size:  " + this.configTree.size());
-
         int count = 0;
 
         while(it.hasNext()){
 
-
-
-
-            System.out.println("eventId: " + configId);
+            if(Constants.DEBUG)
+                System.out.println("eventId: " + configId);
 
             if(count > configTreeLength - 2){
                 break;
@@ -405,7 +401,8 @@ public class EventCollection {
             boolean skipUpdates = false;
             if(membersAttending.size() == 0){
                 skipUpdates = true;
-                System.out.println("skipUpdates - 0 members attending");
+                if(Constants.DEBUG)
+                    System.out.println("skipUpdates - 0 members attending");
             }
             else {
 
@@ -413,7 +410,8 @@ public class EventCollection {
                 if (membersAttending.size() >= BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant()) {
                     Event newEvent = event.clone();
                     finalConfigTree.put(configId, newEvent);
-                    System.out.println("PLACED EVENT IN finalConfigTree: " + configId);
+                    if(Constants.DEBUG)
+                        System.out.println("PLACED EVENT IN finalConfigTree: " + configId);
 
                     for (int userId : membersAttending.keySet()) {
                         this.deleteMemberFromAllConfigs(userId, configId);
@@ -428,7 +426,8 @@ public class EventCollection {
 
                         skipUpdates = true;
                     }
-                    System.out.println("delete Event, attending is less than MIN_NumberOfMembersAllowedPerRestaurant");
+                    if(Constants.DEBUG)
+                        System.out.println("delete Event, attending is less than MIN_NumberOfMembersAllowedPerRestaurant");
                 }
 
                 if (skipUpdates == false) {
@@ -453,7 +452,8 @@ public class EventCollection {
 
 
         if(placedMemberList.size() == this.getMembersList().size()){
-            System.out.println("ALL MEMBERS PLACED SUCCESSFULLY");
+            if(Constants.DEBUG)
+                System.out.println("ALL MEMBERS PLACED SUCCESSFULLY");
         }
 
         int totalPmcForConfig = 0;
@@ -469,12 +469,14 @@ public class EventCollection {
             }
         }
 
-        System.out.println(finalMemberList.size() + " members placed of " + this.membersList.size());
+        if(Constants.DEBUG)
+            System.out.println(finalMemberList.size() + " members placed of " + this.membersList.size());
 
         Set<Integer> unplacedMembers = this.getMembersAsIntegerSet();
         unplacedMembers.removeAll(finalMemberList);
 
-        System.out.println("Unplaced:  " + unplacedMembers.toString());
+        if(Constants.DEBUG)
+            System.out.println("Unplaced:  " + unplacedMembers.toString());
 
         finalEventCollection.setConfigTree(finalConfigTree);
         finalEventCollection.setHtmlNumUnplaced("Unplaced:  " + unplacedMembers.toString());

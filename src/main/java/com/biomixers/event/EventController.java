@@ -4,8 +4,6 @@ import com.biomixers.BiomixersApplication;
 import com.biomixers.filter.SearchFilterQuery;
 import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
-import com.biomixers.util.HelperFunctions;
-import org.hibernate.id.uuid.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +28,10 @@ public class EventController {
 
         HashMap<Integer, FinalEventCollection> allRuns = new HashMap<>();
 
-        int maxRuns = 10;
+        int maxRuns = 200;
 
-        BiomixersApplication.getSearchFilterQuery().setMinAllowedPerRestaurant(4);
-        BiomixersApplication.getSearchFilterQuery().setMaxAllowedPerRestaurant(15);
+        //BiomixersApplication.getSearchFilterQuery().setMinAllowedPerRestaurant(4);
+        //BiomixersApplication.getSearchFilterQuery().setMaxAllowedPerRestaurant(15);
 
         int membersMaxMinAllowedRange = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant() - BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant() - 2;
 
@@ -42,39 +40,92 @@ public class EventController {
         if(numSteps == 0)
             numSteps = 1;
 
+
         int descCount = 0;
 
         int maxNumberOfMembersAllowedPerRestaurant = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant();
 
+        int maxActiveConfigs;
+
         for(int i = 1; i < maxRuns + 1; i++){
-            int maxActiveConfigs = numSteps - descCount;
+            maxActiveConfigs = numSteps - descCount;
 
             FinalEventCollection finalEventCollection = EventCollection.runSorter(membersList, maxActiveConfigs);
             finalEventCollection.setMaxActiveConfigs(maxActiveConfigs);
             finalEventCollection.setMaxMembersAllowedPerRestaurant(maxNumberOfMembersAllowedPerRestaurant);
 
-            allRuns.put(i, finalEventCollection);
+            allRuns.put(finalEventCollection.hashCode(), finalEventCollection);
 
             descCount += 1;
 
-            if((float) i % numSteps == 0.0){
+            if(((float) i % numSteps) == 0.0){
                 maxNumberOfMembersAllowedPerRestaurant -= 1;
                 descCount = 0;
+
+
             }
 
-            // TODO:  slowly lower max_number_of_members_allowed_per_restaurant
+            // TODO:  slowly lower max_number_of_members_allowed_per_restaurant?
             // TODO:  slowly increase ['MAX_NumberOfMembersMetAlreadyAllowance'] (maybe?)
 
-            Set<String> temp = new HashSet<>();
 
 
         }
 
         System.out.println(allRuns.toString());
 
-        for(Event event : eventCollection.getConfigTree().values()){
-            //System.out.println(event.getCount());
-        }
+        // TODO:  write this code to order results
+        /*
+        temp = []
+    res = defaultdict(dict)
+    for key, data in all_runs.items():
+        skip_this_config = False
+        temp_str = ''
+
+        for config_id, temp_config in data['config_tree'].items():
+            # Do not include this result if the number of members attending is greater than allowed
+
+            if temp_config['count'] > gvs.GLOBALS['MAX_NumberOfMembersAllowedPerRestaurant']:
+                skip_this_config = True
+
+           # pprint.pprint(temp_config)
+            temp_str += str(temp_config['config_id'])
+
+        unique_config_identifier = str(data['total_pmc']) + temp_str
+
+        if unique_config_identifier not in temp:
+            temp.append(unique_config_identifier)
+            if skip_this_config is False:
+                res[key] = data
+
+
+
+    all_runs_by_unplaced = {}
+    all_runs_by_pmc = {}
+
+    # Sort all_runs by num_unplaced
+    temp_dict = OrderedDict(sorted(res.items(), key = lambda x: (getitem(x[1], 'num_unplaced_int'))))
+    count = 0
+    for key, value in temp_dict.items():
+        count += 1
+        all_runs_by_unplaced.update({count: value})
+
+        if count >= 6:
+            break
+
+    del temp_dict
+
+    # Sort all_runs by total_pmc
+    temp_dict = OrderedDict(sorted(res.items(), key = lambda x: (getitem(x[1], 'total_pmc'))))
+    count = 0
+    for key, value in temp_dict.items():
+        count += 1
+        all_runs_by_pmc.update({count: value})
+
+        if count >= 6:
+            break
+         */
+
 
 
         return allRuns;
