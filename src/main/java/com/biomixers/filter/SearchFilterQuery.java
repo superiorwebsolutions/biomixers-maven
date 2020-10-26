@@ -12,7 +12,7 @@ public class SearchFilterQuery {
     public SearchFilterQuery(){
 
     }
-
+//
 
     public SearchFilterQuery(int minAllowedPerRestaurant, int maxAllowedPerRestaurant, int numDaysOfAvailability, int numFoodPreferences, int maxNumberOfMembersMetAllowance, float percentageOfMembersMet, boolean randomizeResults) {
         super();
