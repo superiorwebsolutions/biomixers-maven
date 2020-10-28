@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class EventController {
 
@@ -21,7 +23,7 @@ public class EventController {
 
 
     @GetMapping("/final")
-    public HashMap<Integer, FinalEventCollection> getFinalEventCollection(){
+    public List<FinalEventCollection> getFinalEventCollection(){
 
         EventCollection eventCollection = new EventCollection();
         List<Member> membersList = memberController.getAllMembers();
@@ -127,8 +129,9 @@ public class EventController {
          */
 
 
-
-        return allRuns;
+        List<FinalEventCollection> resultsList = allRuns.values().stream()
+                .collect(Collectors.toList());
+        return resultsList;
     }
 
     @GetMapping("/event/{eventId}")

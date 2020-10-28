@@ -5,7 +5,6 @@ import com.biomixers.member.Member;
 public class EventMemberAttending {
     int userId;
     Member memberData;
-    String memberName;
     int pmc;
 
     public EventMemberAttending(){
@@ -16,7 +15,6 @@ public class EventMemberAttending {
         super();
         this.userId = userId;
         this.memberData = memberData;
-        //this.memberName = memberData.getFullName();
         this.pmc = pmc;
     }
 
@@ -53,13 +51,6 @@ public class EventMemberAttending {
 
     public void pmcMinusOne(){ this.pmc -= 1; }
 
-    public String getMemberName() {
-        return memberName;
-    }
-
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
-    }
 /*
     @Override
     public String toString() {

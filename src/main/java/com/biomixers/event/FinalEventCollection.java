@@ -1,8 +1,12 @@
 package com.biomixers.event;
 
+import com.biomixers.member.Member;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 
 public class FinalEventCollection {
 
@@ -10,7 +14,9 @@ public class FinalEventCollection {
 
     private int numUnplacedInt;
 
-    private String htmlNumUnplaced;
+    private int numPlacedInt;
+
+    private List<Member> membersPlacedList;
 
     private String htmlPlaced;
 
@@ -24,11 +30,12 @@ public class FinalEventCollection {
 
     }
 
-    public FinalEventCollection(int totalPmc, int numUnplacedInt, String htmlNumUnplaced, String htmlPlaced, int maxActiveConfigs, int maxMembersAllowedPerRestaurant) {
+    public FinalEventCollection(int totalPmc, int numUnplacedInt, int numPlacedInt, List<Member> membersPlacedList, String htmlPlaced, int maxActiveConfigs, int maxMembersAllowedPerRestaurant) {
         super();
         this.totalPmc = totalPmc;
         this.numUnplacedInt = numUnplacedInt;
-        this.htmlNumUnplaced = htmlNumUnplaced;
+        this.numPlacedInt = numPlacedInt;
+        this.membersPlacedList = membersPlacedList;
         this.htmlPlaced = htmlPlaced;
         this.maxActiveConfigs = maxActiveConfigs;
         this.maxMembersAllowedPerRestaurant = maxMembersAllowedPerRestaurant;
@@ -50,12 +57,20 @@ public class FinalEventCollection {
         this.numUnplacedInt = numUnplacedInt;
     }
 
-    public String getHtmlNumUnplaced() {
-        return htmlNumUnplaced;
+    public int getNumPlacedInt() {
+        return numPlacedInt;
     }
 
-    public void setHtmlNumUnplaced(String htmlNumUnplaced) {
-        this.htmlNumUnplaced = htmlNumUnplaced;
+    public void setNumPlacedInt(int numPlacedInt) {
+        this.numPlacedInt = numPlacedInt;
+    }
+
+    public List<Member> getMembersPlacedList() {
+        return membersPlacedList;
+    }
+
+    public void setMembersPlacedList(List<Member> membersPlacedList) {
+        this.membersPlacedList = membersPlacedList;
     }
 
     public String getHtmlPlaced() {
@@ -97,13 +112,12 @@ public class FinalEventCollection {
         FinalEventCollection that = (FinalEventCollection) o;
         return totalPmc == that.totalPmc &&
                 numUnplacedInt == that.numUnplacedInt &&
-                Objects.equals(htmlNumUnplaced, that.htmlNumUnplaced) &&
-                Objects.equals(htmlPlaced, that.htmlPlaced);
+                numPlacedInt == that.numUnplacedInt;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(totalPmc, numUnplacedInt, htmlNumUnplaced, htmlPlaced);
+        return Objects.hash(totalPmc, numUnplacedInt, numPlacedInt, htmlPlaced);
     }
 
     @Override
@@ -111,7 +125,8 @@ public class FinalEventCollection {
         return "FinalEventCollection{" +
                 "totalPmc=" + totalPmc +
                 ", numUnplacedInt=" + numUnplacedInt +
-                ", htmlNumUnplaced='" + htmlNumUnplaced + '\'' +
+                ", numPlacedInt=" + numPlacedInt +
+                ", membersPlacedList=" + membersPlacedList +
                 ", htmlPlaced='" + htmlPlaced + '\'' +
                 ", maxActiveConfigs=" + maxActiveConfigs +
                 ", maxMembersAllowedPerRestaurant=" + maxMembersAllowedPerRestaurant +

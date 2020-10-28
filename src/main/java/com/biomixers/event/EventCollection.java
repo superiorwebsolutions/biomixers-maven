@@ -16,6 +16,7 @@ public class EventCollection {
 
 
 
+
     public EventCollection(){
 
     }
@@ -40,9 +41,9 @@ public class EventCollection {
         HashMap<String, HashMap<String, HashMap<String, HashMap<Integer, EventMemberAttending>>>> masterArray = new HashMap<>();
 
         for(Member member : membersList) {
-            int userId = member.getUser_id();
+            int userId = member.getUserId();
 
-            List<String> foodPreferences = member.getFood_preferences();
+            List<String> foodPreferences = member.getFoodPreferences();
 
             Map<String, String[]> availability = member.getAvailability();
 
@@ -134,7 +135,7 @@ public class EventCollection {
     public Set<Integer> getMembersAsIntegerSet(){
         Set<Integer> set = new HashSet<>();
         for(Member member : this.membersList){
-            set.add(member.getUser_id());
+            set.add(member.getUserId());
         }
         return set;
     }
@@ -472,17 +473,25 @@ public class EventCollection {
         if(Constants.DEBUG)
             System.out.println(finalMemberList.size() + " members placed of " + this.membersList.size());
 
-        Set<Integer> unplacedMembers = this.getMembersAsIntegerSet();
-        unplacedMembers.removeAll(finalMemberList);
+        Set<Integer> unplacedMembersIntList = this.getMembersAsIntegerSet();
+        unplacedMembersIntList.removeAll(finalMemberList);
+
+        // Convert list of userIds to list of user fullNames
+        List<Member> unplacedMembers = new ArrayList<>();
+        for(Member member : this.membersList){
+            int userId = member.getUserId();
+            if(unplacedMembersIntList.contains(userId))
+                unplacedMembers.add(member);
+        }
 
         if(Constants.DEBUG)
-            System.out.println("Unplaced:  " + unplacedMembers.toString());
+            System.out.println("Unplaced:  " + unplacedMembersIntList.toString());
 
         finalEventCollection.setConfigTree(finalConfigTree);
-        finalEventCollection.setHtmlNumUnplaced("Unplaced:  " + unplacedMembers.toString());
+        finalEventCollection.setMembersPlacedList(unplacedMembers);
         finalEventCollection.setHtmlPlaced(finalMemberList.size() + " members placed of " + this.membersList.size());
         finalEventCollection.setTotalPmc(totalPmcForConfig);
-        finalEventCollection.setNumUnplacedInt(unplacedMembers.size());
+        finalEventCollection.setNumUnplacedInt(unplacedMembersIntList.size());
 
         return finalEventCollection;
 

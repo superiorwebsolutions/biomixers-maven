@@ -2,7 +2,6 @@ package com.biomixers.member;
 
 import com.biomixers.BiomixersApplication;
 import com.biomixers.util.HelperFunctions;
-import com.biomixers.event.EventCollection;
 import com.biomixers.filter.SearchFilterQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +71,7 @@ public class MemberService {
          */
 
         for (int i = 0; i < total_num_members; i++){
-            allMemberIds[i] = members.get(i).getUser_id();
+            allMemberIds[i] = members.get(i).getUserId();
         }
 
         for (Member member: members){
@@ -90,7 +89,7 @@ public class MemberService {
 
             // Sets random generator seed, forces consistency in sample data
             if(!searchFilterQuery.isRandomizeResults()) {
-                seed = member.getUser_id();
+                seed = member.getUserId();
                 //rand.setSeed(member.getUser_id());
             }
             else{
@@ -130,7 +129,7 @@ public class MemberService {
 
 
             member.setAvailability(availability);
-            member.setFood_preferences(food_preferences);
+            member.setFoodPreferences(food_preferences);
             member.setMembersMet(members_met);
 
             memberRepository.save(member);

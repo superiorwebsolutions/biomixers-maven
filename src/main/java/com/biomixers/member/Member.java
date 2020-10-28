@@ -1,8 +1,6 @@
 package com.biomixers.member;
 
 
-import org.aspectj.weaver.ast.Test;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -20,13 +18,13 @@ public class Member implements Serializable, Cloneable {
     @Id
     @Column(name="user_id")
     //@GeneratedValue
-    private Integer user_id;
+    private Integer userId;
 
     //@Type( type = "string-array" )
     //@Column(columnDefinition = "text[]")
     @ElementCollection
     @CollectionTable(name ="food_preferences")
-    private List<String> food_preferences = new ArrayList<>();
+    private List<String> foodPreferences = new ArrayList<>();
 
 
     @Column(name = "full_name")
@@ -60,40 +58,28 @@ public class Member implements Serializable, Cloneable {
 
     }
 
-    public Member(int user_id, String email, String fullName) {
+    public Member(int userId, String email, String fullName) {
         super();
 
-        /*
-        HashMap availability = new HashMap();
-
-        availability.put("Monday", new String[]{"Breakfast", "Lunch"});
-        */
-
-
-        //Member member = new Member(new String[]{"American", "Mexican"}, "Dan Bernstein", "dan@swssupport.com", 11, new int[]{33, 45, 66}, availability, 0);
-
-        List<Integer> met = Arrays.asList(33, 45, 66);
-
-        List<String> food_preferences = Arrays.asList("American", "Mexican");
 
         int num_active_configs = 0;
 
-        this.food_preferences = food_preferences;
+        this.foodPreferences = null;
         this.fullName = fullName;
         this.email = email;
-        this.user_id = user_id;
-        this.membersMet = met;
+        this.userId = userId;
+        this.membersMet = null;
         this.availability = null;
         this.numActiveConfigs = num_active_configs;
     }
 
-    public Member(int user_id, String email, String fullName, List<Integer> membersMet, List<String> food_preferences, HashMap availability, int numActiveConfigs) {
+    public Member(int userId, String email, String fullName, List<Integer> membersMet, List<String> foodPreferences, HashMap availability, int numActiveConfigs) {
         super();
 
-        this.food_preferences = food_preferences;
+        this.foodPreferences = foodPreferences;
         this.fullName = fullName;
         this.email = email;
-        this.user_id = user_id;
+        this.userId = userId;
         this.membersMet = membersMet;
         this.availability = availability;
         this.numActiveConfigs = numActiveConfigs;
@@ -119,20 +105,20 @@ public class Member implements Serializable, Cloneable {
         this.numActiveConfigs++;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer user_id) {
+        this.userId = user_id;
     }
 
-    public List<String> getFood_preferences() {
-        return food_preferences;
+    public List<String> getFoodPreferences() {
+        return foodPreferences;
     }
 
-    public void setFood_preferences(List<String> food_preferences) {
-        this.food_preferences = food_preferences;
+    public void setFoodPreferences(List<String> food_preferences) {
+        this.foodPreferences = food_preferences;
     }
 
     public String getFullName() {
