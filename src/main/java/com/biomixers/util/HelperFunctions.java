@@ -3,6 +3,7 @@ package com.biomixers.util;
 import com.biomixers.event.Event;
 import com.biomixers.event.EventCollection;
 import com.biomixers.event.EventMemberAttending;
+import com.biomixers.event.FinalEventCollection;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -184,7 +185,7 @@ public class HelperFunctions {
 
     }
 
-    public static void sortAllConfigsByCount(EventCollection eventCollection, boolean sortDecreasing){
+    public static void sortAllConfigsByCount(EventCollection eventCollection){
 
         List list = new LinkedList(eventCollection.getConfigTree().entrySet());
         // Defined Custom Comparator here
@@ -198,12 +199,7 @@ public class HelperFunctions {
 //                11: {num_active_configs=21}
                 // TODO:  Change (HashMap) to Members object
                 // TODO:  Instead of casting here, change original HashMap instantiation to be nested (ie:  Map.Entry<String, HashMap<String>>)
-                if(sortDecreasing){
 
-                }
-                else{
-
-                }
                 return ((Comparable)((Event)((Map.Entry)o2).getValue()).getCount())
                         .compareTo(((Event)((Map.Entry)o1).getValue()).getCount());
 
@@ -226,6 +222,7 @@ public class HelperFunctions {
         eventCollection.setConfigTree(sortedHashMap);
 
     }
+
 
     public static Event getEvent(EventCollection temp){
         return temp.getEventById(1);

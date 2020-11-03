@@ -41,6 +41,7 @@ public class FinalEventCollection {
         this.maxMembersAllowedPerRestaurant = maxMembersAllowedPerRestaurant;
     }
 
+
     public int getTotalPmc() {
         return totalPmc;
     }

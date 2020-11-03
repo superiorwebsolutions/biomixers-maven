@@ -15,9 +15,6 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    private SearchFilterQuery searchFilterQuery;
-
-
     static {
         /*
         HashMap availability = new HashMap();
@@ -37,6 +34,7 @@ public class MemberService {
 
     public List<Member> generateSampleData(){
         SearchFilterQuery searchFilterQuery = BiomixersApplication.getSearchFilterQuery();
+
         //searchFilterQuery = new SearchFilterQuery();
 
         // USE http://localhost:8080/filter post to run /members
@@ -111,9 +109,7 @@ public class MemberService {
             List<Integer> list1 = HelperFunctions.convertArrayToList(allMemberIds);
 
             // Choose random sample of 25% of members_met
-            ArrayList<Integer> list2 = (ArrayList<Integer>) HelperFunctions.randomSampleInt(list1, (int)(total_num_members * searchFilterQuery.getPercentageOfMembersMet()), seed);
-
-            ArrayList<Integer> members_met = list2;
+            ArrayList<Integer> members_met = (ArrayList<Integer>) HelperFunctions.randomSampleInt(list1, (int)(total_num_members * searchFilterQuery.getPercentageOfMembersMet()), seed);
 
 
             // TODO:  Use searchFilterQuery.getNumFoodPreferences to figure out how many of these days to include
@@ -144,24 +140,8 @@ public class MemberService {
 
     public List<Member> getAllMembers(){
 
-        searchFilterQuery = new SearchFilterQuery();
-
-        // USE http://localhost:8080/filter post to run /members
-             /*
-    // USE THIS FOR TESTING THE POST
-    {
-"minAllowedPerRestaurant": 6,
-"maxAllowedPerRestaurant": 12,
-"numDaysOfAvailability": 3,
-"numFoodPreferences": 3,
-  "randomizeResults": false
-}
-     */
-
-
         List<Member> members = new ArrayList<>();
 
-        int total_num_members = memberRepository.findAll().size();
 
         memberRepository.findAll()
                 .forEach(members::add);

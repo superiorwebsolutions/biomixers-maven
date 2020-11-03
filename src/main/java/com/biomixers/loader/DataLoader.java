@@ -60,7 +60,7 @@ public class DataLoader implements ApplicationRunner {
 
          */
 
-        memberController.generateSampleData();
+        //memberController.generateSampleData();
 
 
 

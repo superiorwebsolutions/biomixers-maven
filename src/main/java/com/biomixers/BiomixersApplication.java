@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BiomixersApplication {
 
-	public static SearchFilterQuery searchFilterQuery = new SearchFilterQuery();
+	private static SearchFilterQuery searchFilterQuery = new SearchFilterQuery();
 
 	public static void main(String[] args) {
 
@@ -18,7 +18,7 @@ public class BiomixersApplication {
 		return searchFilterQuery;
 	}
 
-	public static void setSearchFilterQuery(SearchFilterQuery searchFilterQuery) {
-		BiomixersApplication.searchFilterQuery = searchFilterQuery;
+	public static void setSearchFilterQuery(SearchFilterQuery data) {
+		BiomixersApplication.searchFilterQuery = data;
 	}
 }

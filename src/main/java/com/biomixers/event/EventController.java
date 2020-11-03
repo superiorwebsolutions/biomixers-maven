@@ -4,11 +4,13 @@ import com.biomixers.BiomixersApplication;
 import com.biomixers.filter.SearchFilterQuery;
 import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
+import com.sun.jndi.toolkit.dir.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.directory.SearchControls;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,119 +21,17 @@ public class EventController {
     @Autowired
     private MemberController memberController;
 
-    private SearchFilterQuery searchFilterQuery;
+    @Autowired
+    private EventService eventService;
 
 
     @GetMapping("/final")
     public List<FinalEventCollection> getFinalEventCollection(){
+        memberController.generateSampleData();
 
-        EventCollection eventCollection = new EventCollection();
-        List<Member> membersList = memberController.getAllMembers();
+        List<FinalEventCollection> finalEventCollection = eventService.getFinalEventCollection();
 
-        HashMap<Integer, FinalEventCollection> allRuns = new HashMap<>();
-
-        int maxRuns = 200;
-
-        //BiomixersApplication.getSearchFilterQuery().setMinAllowedPerRestaurant(4);
-        //BiomixersApplication.getSearchFilterQuery().setMaxAllowedPerRestaurant(15);
-
-        int membersMaxMinAllowedRange = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant() - BiomixersApplication.getSearchFilterQuery().getMinAllowedPerRestaurant() - 2;
-
-        int numSteps = Math.round(maxRuns / membersMaxMinAllowedRange);
-
-        if(numSteps == 0)
-            numSteps = 1;
-
-
-        int descCount = 0;
-
-        int maxNumberOfMembersAllowedPerRestaurant = BiomixersApplication.getSearchFilterQuery().getMaxAllowedPerRestaurant();
-
-        int maxActiveConfigs;
-
-        for(int i = 1; i < maxRuns + 1; i++){
-            maxActiveConfigs = numSteps - descCount;
-
-            FinalEventCollection finalEventCollection = EventCollection.runSorter(membersList, maxActiveConfigs);
-            finalEventCollection.setMaxActiveConfigs(maxActiveConfigs);
-            finalEventCollection.setMaxMembersAllowedPerRestaurant(maxNumberOfMembersAllowedPerRestaurant);
-
-            allRuns.put(finalEventCollection.hashCode(), finalEventCollection);
-
-            descCount += 1;
-
-            if(((float) i % numSteps) == 0.0){
-                maxNumberOfMembersAllowedPerRestaurant -= 1;
-                descCount = 0;
-
-
-            }
-
-            // TODO:  slowly lower max_number_of_members_allowed_per_restaurant?
-            // TODO:  slowly increase ['MAX_NumberOfMembersMetAlreadyAllowance'] (maybe?)
-
-
-
-        }
-
-        System.out.println(allRuns.toString());
-
-        // TODO:  write this code to order results
-        /*
-        temp = []
-    res = defaultdict(dict)
-    for key, data in all_runs.items():
-        skip_this_config = False
-        temp_str = ''
-
-        for config_id, temp_config in data['config_tree'].items():
-            # Do not include this result if the number of members attending is greater than allowed
-
-            if temp_config['count'] > gvs.GLOBALS['MAX_NumberOfMembersAllowedPerRestaurant']:
-                skip_this_config = True
-
-           # pprint.pprint(temp_config)
-            temp_str += str(temp_config['config_id'])
-
-        unique_config_identifier = str(data['total_pmc']) + temp_str
-
-        if unique_config_identifier not in temp:
-            temp.append(unique_config_identifier)
-            if skip_this_config is False:
-                res[key] = data
-
-
-
-    all_runs_by_unplaced = {}
-    all_runs_by_pmc = {}
-
-    # Sort all_runs by num_unplaced
-    temp_dict = OrderedDict(sorted(res.items(), key = lambda x: (getitem(x[1], 'num_unplaced_int'))))
-    count = 0
-    for key, value in temp_dict.items():
-        count += 1
-        all_runs_by_unplaced.update({count: value})
-
-        if count >= 6:
-            break
-
-    del temp_dict
-
-    # Sort all_runs by total_pmc
-    temp_dict = OrderedDict(sorted(res.items(), key = lambda x: (getitem(x[1], 'total_pmc'))))
-    count = 0
-    for key, value in temp_dict.items():
-        count += 1
-        all_runs_by_pmc.update({count: value})
-
-        if count >= 6:
-            break
-         */
-
-
-        List<FinalEventCollection> resultsList = allRuns.values().stream()
-                .collect(Collectors.toList());
-        return resultsList;
+        return finalEventCollection.subList(0, 15);
     }
 
     @GetMapping("/event/{eventId}")
@@ -161,25 +61,22 @@ public class EventController {
 
     // Put this in QueryController?
     @PostMapping("/filter")
-    public ResponseEntity<SearchFilterQuery> filterResults(@RequestBody SearchFilterQuery filter) {
+    public ResponseEntity<SearchFilterQuery> filterResults(@RequestBody HashMap<String, Object> responseData) {
 
-                /*
-    // USE THIS FOR TESTING THE POST
-    {
-"minAllowedPerRestaurant": 6,
-"maxAllowedPerRestaurant": 12,
-"numDaysOfAvailability": 3,
-"numFoodPreferences": 3,
-  "randomizeResults": false
-}
-     */
+        SearchFilterQuery searchFilterQuery = new SearchFilterQuery();
+        searchFilterQuery.setMinAllowedPerRestaurant(Integer.parseInt(responseData.get("minAllowedPerRestaurant").toString()));
+        searchFilterQuery.setMaxAllowedPerRestaurant(Integer.parseInt(responseData.get("maxAllowedPerRestaurant").toString()));
+        //searchFilterQuery.setNumDaysOfAvailability(Integer.parseInt(responseData.get("numDaysOfAvailability").toString()));
+        //searchFilterQuery.setNumFoodPreferences(Integer.parseInt(responseData.get("numFoodPreferences").toString()));
+        searchFilterQuery.setPercentageOfMembersMet(Float.parseFloat(responseData.get("percentageOfMembersMet").toString()));
+        searchFilterQuery.setRandomizeResults(Boolean.parseBoolean(responseData.get("randomizeResults").toString()));
 
-        EventCollection eventCollection = new EventCollection(memberController.getAllMembers());
-        //eventCollection.setSearchFilterQuery(filter);
+        BiomixersApplication.setSearchFilterQuery(searchFilterQuery);
 
-        System.out.println(searchFilterQuery.toString());
-        memberController.generateSampleData();
-        memberController.getAllMembers();
+
+
+
+        //eventService.getFinalEventCollection();
 
 
         return new ResponseEntity<SearchFilterQuery>(searchFilterQuery, HttpStatus.OK);
