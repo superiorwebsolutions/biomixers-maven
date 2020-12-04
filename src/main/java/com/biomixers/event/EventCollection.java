@@ -150,7 +150,7 @@ public class EventCollection {
 
             List<Integer> active_configs_list = new ArrayList<>();
 
-            HashMap<Integer, EventMemberAttending> members_attending = event.getMembersAttending();
+            Map<Integer, EventMemberAttending> members_attending = event.getMembersAttending();
 
             for(EventMemberAttending eventMemberAttending : members_attending.values()){
 
@@ -254,7 +254,7 @@ public class EventCollection {
             Integer configId = event.getConfigId();
             count += 1;
 
-            HashMap<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
+            Map<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
             int currentAttendingCount = membersAttending.size();
 
 //            TODO:  change this to while loop, while:  pmc > gvs.GLOBALS['MAX_NumberOfMembersMetAlreadyAllowance']) or (current_attending_count > gvs.GLOBALS['MAX_NumberOfMembersAllowedPerRestaurant']
@@ -331,7 +331,7 @@ public class EventCollection {
                 int uid = (int) elem.getValue();
 
                 // Print config_id, user_id, and num_active configs (for each member deleted from all lists)
-                HashMap<Integer, EventMemberAttending> membersAttending = this.getEventById(cid).getMembersAttending();
+                Map<Integer, EventMemberAttending> membersAttending = this.getEventById(cid).getMembersAttending();
 
                 Event event = this.getEventById(cid);
 
@@ -394,7 +394,7 @@ public class EventCollection {
             }
              */
 
-            HashMap<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
+            Map<Integer, EventMemberAttending> membersAttending = event.getMembersAttending();
 
             boolean skipUpdates = false;
             if(membersAttending.size() == 0){

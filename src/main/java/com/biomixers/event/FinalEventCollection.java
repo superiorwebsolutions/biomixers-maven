@@ -2,13 +2,19 @@ package com.biomixers.event;
 
 import com.biomixers.member.Member;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Entity
+public class FinalEventCollection implements Serializable {
 
-public class FinalEventCollection {
+    @Id
+    @GeneratedValue
+    private Integer id;
 
     private int totalPmc;
 
@@ -16,14 +22,18 @@ public class FinalEventCollection {
 
     private int numPlacedInt;
 
+    @Transient
     private List<Member> membersPlacedList;
 
+    @Transient
     private String htmlPlaced;
 
     private int maxActiveConfigs;
 
     private int maxMembersAllowedPerRestaurant;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "id", referencedColumnName = "config_id")
     Map<Integer, Event> configTree = new HashMap<>();
 
     public FinalEventCollection(){

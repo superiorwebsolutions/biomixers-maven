@@ -39,7 +39,7 @@ public class EventController {
         EventCollection eventCollection = new EventCollection(memberController.getAllMembers());
         //System.out.println(memberController.getAllMembers().hashCode());
 
-        HashMap<Integer, EventMemberAttending> members_attending = eventCollection.getEventById(eventId).getMembersAttending();
+        Map<Integer, EventMemberAttending> members_attending = eventCollection.getEventById(eventId).getMembersAttending();
 
 
         //eventCollection.updateAllPmcValues();

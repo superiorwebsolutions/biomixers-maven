@@ -20,6 +20,8 @@ public class Member implements Serializable, Cloneable {
     //@GeneratedValue
     private Integer userId;
 
+
+
     //@Type( type = "string-array" )
     //@Column(columnDefinition = "text[]")
     @ElementCollection

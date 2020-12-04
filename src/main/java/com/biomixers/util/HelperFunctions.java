@@ -3,7 +3,6 @@ package com.biomixers.util;
 import com.biomixers.event.Event;
 import com.biomixers.event.EventCollection;
 import com.biomixers.event.EventMemberAttending;
-import com.biomixers.event.FinalEventCollection;
 
 import java.lang.reflect.Array;
 import java.util.*;

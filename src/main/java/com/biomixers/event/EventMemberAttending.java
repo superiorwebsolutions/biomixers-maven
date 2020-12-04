@@ -2,9 +2,23 @@ package com.biomixers.event;
 
 import com.biomixers.member.Member;
 
-public class EventMemberAttending {
-    int userId;
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+public class EventMemberAttending implements Serializable {
+
+    @Id
+    @Column(name="user_id")
+    Integer userId;
+
+    //@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     Member memberData;
+
+
     int pmc;
 
     public EventMemberAttending(){
@@ -21,11 +35,11 @@ public class EventMemberAttending {
 
 
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -51,16 +65,17 @@ public class EventMemberAttending {
 
     public void pmcMinusOne(){ this.pmc -= 1; }
 
-/*
+
+
     @Override
     public String toString() {
         return "EventMemberAttending{" +
                 "userId=" + userId +
-                ", memberData=" + memberData +
- //               ", memberData=" + memberData.getFullName() +
+              //  ", memberData=" + memberData +
+                ", memberData=" + memberData.getFullName() +
                 ", pmc=" + pmc +
                 '}';
     }
 
- */
+
 }

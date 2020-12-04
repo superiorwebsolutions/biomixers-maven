@@ -1,12 +1,19 @@
 package com.biomixers.event;
 
-import com.biomixers.member.Member;
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
+@Entity
 public class Event implements Serializable, Cloneable {
-    int configId;
+
+    @Id
+    @Column(name="config_id")
+    Integer configId;
+
+
+
     int totalPmc;
     int count;
 
@@ -17,7 +24,9 @@ public class Event implements Serializable, Cloneable {
     String dayOfWeek;
     String timeOfDay;
 
-    HashMap<Integer, EventMemberAttending> membersAttending = new HashMap<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "config_id", referencedColumnName = "config_id")
+    Map<Integer, EventMemberAttending> membersAttending = new HashMap<>();
 
     public Event(){
 
@@ -48,11 +57,11 @@ public class Event implements Serializable, Cloneable {
 
     }
 
-    public int getConfigId() {
+    public Integer getConfigId() {
         return configId;
     }
 
-    public void setConfigId(int configId) {
+    public void setConfigId(Integer configId) {
         this.configId = configId;
     }
 
@@ -74,7 +83,7 @@ public class Event implements Serializable, Cloneable {
 
     public void countMinusOne(){ this.count -= 1; }
 
-    public HashMap<Integer, EventMemberAttending> getMembersAttending() {
+    public Map<Integer, EventMemberAttending> getMembersAttending() {
         return membersAttending;
     }
 
@@ -118,4 +127,17 @@ public class Event implements Serializable, Cloneable {
         this.timeOfDay = timeOfDay;
     }
 
+    @Override
+    public String toString() {
+        return "Event{" +
+                "configId=" + configId +
+                ", totalPmc=" + totalPmc +
+                ", count=" + count +
+                ", medianNumActiveConfigs=" + medianNumActiveConfigs +
+                ", foodType='" + foodType + '\'' +
+                ", dayOfWeek='" + dayOfWeek + '\'' +
+                ", timeOfDay='" + timeOfDay + '\'' +
+                ", membersAttending=" + membersAttending +
+                '}';
+    }
 }

@@ -19,7 +19,18 @@ public class EventService {
     @Autowired
     private MemberController memberController;
 
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private EventMemberAttendingRepository eventMemberAttendingRepository;
+
+    @Autowired
+    private FinalEventCollectionRepository finalEventCollectionRepository;
+
+
     public List<FinalEventCollection> getFinalEventCollection(){
+
 
         List<Member> membersList = memberController.getAllMembers();
 
@@ -59,9 +70,20 @@ public class EventService {
                 }
             }
 
+            if(i == 1){
+                Event event = finalEventCollection.getConfigTree().get(16);
+                //System.out.println(event.getMembersAttending());
+
+                finalEventCollectionRepository.save(finalEventCollection);
+
+                System.out.println(eventMemberAttendingRepository.findById(95).get());
+            }
+
             // TODO:  slowly increase ['MAX_NumberOfMembersMetAlreadyAllowance'] (maybe?)
 
         }
+
+
 
         //System.out.println(allRuns.toString());
 
