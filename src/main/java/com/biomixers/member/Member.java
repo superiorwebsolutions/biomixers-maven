@@ -51,6 +51,7 @@ public class Member implements Serializable, Cloneable {
     //@Convert(converter = HashMapConverter.class)
     @ElementCollection
     @CollectionTable(name ="availability")
+//    @Transient
     private Map<String, String[]> availability = new HashMap<>();
 
     @Column(name = "num_active_configs")

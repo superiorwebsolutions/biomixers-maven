@@ -9,6 +9,10 @@ import java.util.Map;
 public class Event implements Serializable, Cloneable {
 
     @Id
+    @GeneratedValue
+    @Column(name="id")
+    private Integer id;
+
     @Column(name="config_id")
     private Integer configId;
 
@@ -24,8 +28,8 @@ public class Event implements Serializable, Cloneable {
     private String dayOfWeek;
     private String timeOfDay;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "event_member_attending_id", referencedColumnName = "config_id")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", referencedColumnName = "id")
 //    @Transient
     private Map<Integer, EventMemberAttending> membersAttending = new HashMap<>();
 

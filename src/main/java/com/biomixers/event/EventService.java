@@ -55,7 +55,9 @@ public class EventService {
         for(int i = 1; i < maxRuns + 1; i++){
             maxActiveConfigs = numSteps - descCount;
 
+
             FinalEventCollection finalEventCollection = EventCollection.runSorter(membersList, maxActiveConfigs, maxNumberOfMembersAllowedPerRestaurant);
+
             finalEventCollection.setMaxActiveConfigs(maxActiveConfigs);
             finalEventCollection.setMaxMembersAllowedPerRestaurant(maxNumberOfMembersAllowedPerRestaurant);
 
@@ -70,13 +72,14 @@ public class EventService {
                 }
             }
 
+
             if(i == 1){
-                Event event = finalEventCollection.getConfigTree().get(16);
+//                Event event = finalEventCollection.getConfigTree().get(16);
                 //System.out.println(event.getMembersAttending());
 
                 //eventRepository.save(event);
-                System.out.println(finalEventCollection);
-                finalEventCollectionRepository.save(finalEventCollection);
+//                System.out.println(finalEventCollection);
+//                finalEventCollectionRepository.save(finalEventCollection);
 
 //                System.out.println(eventMemberAttendingRepository.findById(95).get());
             }

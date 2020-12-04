@@ -24,14 +24,22 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private FinalEventCollectionRepository finalEventCollectionRepository;
+
+    @GetMapping("/initial")
+    public void start(){
+        memberController.generateSampleData();
+    }
 
     @GetMapping("/final")
     public List<FinalEventCollection> getFinalEventCollection(){
-        memberController.generateSampleData();
+
 
         List<FinalEventCollection> finalEventCollection = eventService.getFinalEventCollection();
 
-        return finalEventCollection.subList(0, 15);
+        // TODO:  Change to 0, 15 (this breaks it, since repeat members.  Find a way to make unique Ids for members, eventmemberattending, and events
+        return finalEventCollection.subList(0, 5);
     }
 
     @GetMapping("/event/{eventId}")
@@ -41,13 +49,19 @@ public class EventController {
 
         Map<Integer, EventMemberAttending> members_attending = eventCollection.getEventById(eventId).getMembersAttending();
 
-
         //eventCollection.updateAllPmcValues();
 
         //EventCollection tempCollection = eventCollection.duplicate
 
 
         return eventCollection.getEventById(eventId);
+    }
+
+    @PostMapping("/final-event-collection")
+    public void addFinalEventCollection(@RequestBody FinalEventCollection finalEventCollection){
+        finalEventCollectionRepository.save(finalEventCollection);
+
+
     }
 /*
     @GetMapping("/event/1")
@@ -72,8 +86,6 @@ public class EventController {
         searchFilterQuery.setRandomizeResults(Boolean.parseBoolean(responseData.get("randomizeResults").toString()));
 
         BiomixersApplication.setSearchFilterQuery(searchFilterQuery);
-
-
 
 
         //eventService.getFinalEventCollection();

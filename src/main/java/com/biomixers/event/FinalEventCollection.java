@@ -14,7 +14,8 @@ public class FinalEventCollection implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name="event_config_id")
+    private Integer eventConfigId;
 
     private int totalPmc;
 
@@ -32,10 +33,12 @@ public class FinalEventCollection implements Serializable {
 
     private int maxMembersAllowedPerRestaurant;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "final_event_collection_id", referencedColumnName = "id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "final_event_config_id", referencedColumnName = "event_config_id")
 //    @Transient
     Map<Integer, Event> configTree = new HashMap<>();
+
+
 
     public FinalEventCollection(){
 

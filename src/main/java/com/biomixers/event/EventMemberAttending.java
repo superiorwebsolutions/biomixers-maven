@@ -9,6 +9,10 @@ import java.io.Serializable;
 public class EventMemberAttending implements Serializable {
 
     @Id
+    @GeneratedValue
+    @Column(name="id")
+    private Integer id;
+
     @Column(name="user_id")
     private Integer userId;
 
@@ -16,9 +20,9 @@ public class EventMemberAttending implements Serializable {
     //@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-//    @Transient
+//    @OneToOne
+//    @JoinColumn(name = "user_id2", referencedColumnName = "id")
+    @Transient
     private Member memberData;
 
 
