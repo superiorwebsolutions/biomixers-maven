@@ -127,7 +127,7 @@ public class EventCollection {
     }
 
     public Event getEventById(Event event){
-        return this.configTree.get(event.configId);
+        return this.configTree.get(event.getConfigId());
     }
     public Event getEventById(int configId){
         return this.configTree.get(configId);

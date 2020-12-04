@@ -10,23 +10,24 @@ public class Event implements Serializable, Cloneable {
 
     @Id
     @Column(name="config_id")
-    Integer configId;
+    private Integer configId;
 
 
 
-    int totalPmc;
-    int count;
+    private int totalPmc;
+    private int count;
 
 
     // totalNumActiveConfigs is actually the median
-    int medianNumActiveConfigs;
-    String foodType;
-    String dayOfWeek;
-    String timeOfDay;
+    private int medianNumActiveConfigs;
+    private String foodType;
+    private String dayOfWeek;
+    private String timeOfDay;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "config_id", referencedColumnName = "config_id")
-    Map<Integer, EventMemberAttending> membersAttending = new HashMap<>();
+    @JoinColumn(name = "event_member_attending_id", referencedColumnName = "config_id")
+//    @Transient
+    private Map<Integer, EventMemberAttending> membersAttending = new HashMap<>();
 
     public Event(){
 

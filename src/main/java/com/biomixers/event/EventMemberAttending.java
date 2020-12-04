@@ -10,16 +10,19 @@ public class EventMemberAttending implements Serializable {
 
     @Id
     @Column(name="user_id")
-    Integer userId;
+    private Integer userId;
 
     //@OneToOne(cascade = CascadeType.ALL)
     //@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    Member memberData;
+//    @Transient
+    private Member memberData;
 
 
-    int pmc;
+    private int pmc;
 
     public EventMemberAttending(){
 

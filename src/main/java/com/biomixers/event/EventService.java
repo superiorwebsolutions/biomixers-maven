@@ -74,9 +74,11 @@ public class EventService {
                 Event event = finalEventCollection.getConfigTree().get(16);
                 //System.out.println(event.getMembersAttending());
 
+                //eventRepository.save(event);
+                System.out.println(finalEventCollection);
                 finalEventCollectionRepository.save(finalEventCollection);
 
-                System.out.println(eventMemberAttendingRepository.findById(95).get());
+//                System.out.println(eventMemberAttendingRepository.findById(95).get());
             }
 
             // TODO:  slowly increase ['MAX_NumberOfMembersMetAlreadyAllowance'] (maybe?)
