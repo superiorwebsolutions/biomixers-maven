@@ -148,6 +148,13 @@ public class Member implements Serializable, Cloneable {
         this.membersMet = membersMet;
     }
 
+    public void addToMembersMet(Member member){
+        this.membersMet.add(member.getUserId());
+    }
+    public void removeFromMembersMet(Member member){
+        this.membersMet.remove(member.getUserId());
+    }
+
     public Map<String, String[]> getAvailability() {
         return availability;
     }

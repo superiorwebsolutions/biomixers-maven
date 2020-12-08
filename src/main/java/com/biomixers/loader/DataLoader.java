@@ -1,11 +1,8 @@
 package com.biomixers.loader;
 
 //import com.biomixers.MemberDaoServiceCommandLineRunner;
-import com.biomixers.event.EventCollection;
-import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
 import com.biomixers.member.MemberRepository;
-import com.biomixers.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -13,8 +10,6 @@ import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 @Component
 public class DataLoader implements ApplicationRunner {

@@ -22,7 +22,31 @@ public class MemberController {
     private MemberRepository memberRepository;
 
 
+    @RequestMapping(value = "/employee", method = RequestMethod.GET)
+    public Member firstPage() {
 
+        List<Integer> list = Arrays.asList(33, 45, 66);
+        List<String> food_preferences = Arrays.asList("American", "Mexican");
+
+        HashMap<String, String[]> availability = new HashMap<>();
+
+        availability.put("Monday", new String[]{"Breakfast", "Lunch"});
+        //availability.put("Monday", "Breakfast");
+
+        //member = new Member(new String[]{"American", "Mexican"}, "Dan Bernstein", "dan@swssupport.com", 11, new int[]{33, 45, 66}, availability, 0);
+        //member = new Member(2, "TEST", "dan2@swssupport.com");
+
+        Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, null, availability, 0);
+//        Member member = null;
+
+
+        if(member != null){
+//            member = memberRepository.save(member);
+            ////////log.info("New member is created: " + member);
+        }
+
+        return member;
+    }
 
 
     @GetMapping("/add")
@@ -46,7 +70,7 @@ public class MemberController {
     }
 
     @GetMapping("/generate-sample-data")
-    public void generateSampleData() {
+    public ResponseEntity<String> generateSampleData() {
         SearchFilterQuery searchFilterQuery = BiomixersApplication.getSearchFilterQuery();
 
 
@@ -144,6 +168,8 @@ public class MemberController {
 
             memberRepository.save(member);
         }
+
+        return new ResponseEntity<String>("yes", HttpStatus.OK);
     }
 
 

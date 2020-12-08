@@ -2,17 +2,13 @@ package com.biomixers.event;
 
 import com.biomixers.BiomixersApplication;
 import com.biomixers.filter.SearchFilterQuery;
-import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
-import com.sun.jndi.toolkit.dir.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.directory.SearchControls;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController

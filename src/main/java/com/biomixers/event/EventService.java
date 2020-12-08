@@ -3,7 +3,6 @@ package com.biomixers.event;
 import com.biomixers.BiomixersApplication;
 import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
-import com.biomixers.util.HelperFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
