@@ -24,7 +24,7 @@ public class EventController {
     private FinalEventCollectionRepository finalEventCollectionRepository;
 
     @GetMapping("/initial")
-    public void start(){
+    public void start() throws Exception {
         memberController.generateSampleData();
     }
 

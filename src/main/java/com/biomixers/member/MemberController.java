@@ -22,33 +22,6 @@ public class MemberController {
     private MemberRepository memberRepository;
 
 
-    @RequestMapping(value = "/employee", method = RequestMethod.GET)
-    public Member firstPage() {
-
-        List<Integer> list = Arrays.asList(33, 45, 66);
-        List<String> food_preferences = Arrays.asList("American", "Mexican");
-
-        HashMap<String, String[]> availability = new HashMap<>();
-
-        availability.put("Monday", new String[]{"Breakfast", "Lunch"});
-        //availability.put("Monday", "Breakfast");
-
-        //member = new Member(new String[]{"American", "Mexican"}, "Dan Bernstein", "dan@swssupport.com", 11, new int[]{33, 45, 66}, availability, 0);
-        //member = new Member(2, "TEST", "dan2@swssupport.com");
-
-        Member member = new Member(11,"Dan Bernstein", "dan@swssupport.com", list, null, availability, 0);
-//        Member member = null;
-
-
-        if(member != null){
-//            member = memberRepository.save(member);
-            ////////log.info("New member is created: " + member);
-        }
-
-        return member;
-    }
-
-
     @GetMapping("/add")
     public ResponseEntity<Member> addMember() {
         Member member = memberService.addMember();
@@ -70,7 +43,7 @@ public class MemberController {
     }
 
     @GetMapping("/generate-sample-data")
-    public ResponseEntity<String> generateSampleData() {
+    public ResponseEntity<String> generateSampleData() throws Exception {
         SearchFilterQuery searchFilterQuery = BiomixersApplication.getSearchFilterQuery();
 
 
@@ -147,11 +120,11 @@ public class MemberController {
             List<Integer> list1 = HelperFunctions.convertArrayToList(allMemberIds);
 
             // Choose random sample of 25% of members_met
-            ArrayList<Integer> members_met = (ArrayList<Integer>) HelperFunctions.randomSampleInt(list1, (int) (total_num_members * searchFilterQuery.getPercentageOfMembersMet()), seed);
+            Set<Integer> members_met = new HashSet<Integer>(HelperFunctions.randomSampleInt(list1, (int) (total_num_members * searchFilterQuery.getPercentageOfMembersMet()), seed));
 
 
             // TODO:  Use searchFilterQuery.getNumFoodPreferences to figure out how many of these days to include
-            ArrayList<String> food_options = new ArrayList<>();
+            List<String> food_options = new ArrayList<>();
             food_options.add("American");
             food_options.add("Italian");
             food_options.add("Mexican");
@@ -161,15 +134,28 @@ public class MemberController {
             int numFoodPreferences = searchFilterQuery.getNumFoodPreferences();
             List<String> food_preferences = HelperFunctions.randomFoodPreferences(food_options, numFoodPreferences, seed);
 
+            try{
+                member.setAvailability(availability);
+            }
+            catch (Exception ex){
+                System.out.println(ex.getMessage());
+                throw new Exception(ex.getMessage());
+            }
 
-            member.setAvailability(availability);
-            member.setFoodPreferences(food_preferences);
+            try{
+                member.setFoodPreferences(food_preferences);
+            }
+            catch (Exception ex){
+                System.out.println(ex.getMessage());
+                throw new Exception(ex.getMessage());
+            }
+
             member.setMembersMet(members_met);
 
             memberRepository.save(member);
         }
 
-        return new ResponseEntity<String>("yes", HttpStatus.OK);
+        return new ResponseEntity<String>("Generated Sample Data Successfully", HttpStatus.OK);
     }
 
 

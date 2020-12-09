@@ -43,7 +43,7 @@ public class Member implements Serializable, Cloneable {
     //@Column(name="members_met", nullable = true)
     @ElementCollection
     @CollectionTable(name ="members_met")
-    private List<Integer> membersMet = new ArrayList<>();
+    private Set<Integer> membersMet = new HashSet<>();
     //private List<Integer> membersMet;
 
     //@Column(length=10000)
@@ -76,7 +76,7 @@ public class Member implements Serializable, Cloneable {
         this.numActiveConfigs = num_active_configs;
     }
 
-    public Member(int userId, String email, String fullName, List<Integer> membersMet, List<String> foodPreferences, HashMap availability, int numActiveConfigs) {
+    public Member(int userId, String email, String fullName, Set<Integer> membersMet, List<String> foodPreferences, HashMap availability, int numActiveConfigs) {
         super();
 
         this.foodPreferences = foodPreferences;
@@ -120,8 +120,14 @@ public class Member implements Serializable, Cloneable {
         return foodPreferences;
     }
 
-    public void setFoodPreferences(List<String> food_preferences) {
-        this.foodPreferences = food_preferences;
+    public void setFoodPreferences(List<String> food_preferences) throws Exception {
+        if(food_preferences.size() == 0){
+            throw new Exception("Member has no food preferences");
+        }
+        else{
+            this.foodPreferences = food_preferences;
+        }
+
     }
 
     public String getFullName() {
@@ -140,15 +146,15 @@ public class Member implements Serializable, Cloneable {
         this.email = email;
     }
 
-    public List<Integer> getMembersMet() {
+    public Set<Integer> getMembersMet() {
         return membersMet;
     }
 
-    public void setMembersMet(List<Integer> membersMet) {
+    public void setMembersMet(Set<Integer> membersMet) {
         this.membersMet = membersMet;
     }
 
-    public void addToMembersMet(Member member){
+    public void addToMembersMet(Member member) {
         this.membersMet.add(member.getUserId());
     }
     public void removeFromMembersMet(Member member){
@@ -159,8 +165,19 @@ public class Member implements Serializable, Cloneable {
         return availability;
     }
 
-    public void setAvailability(Map<String, String[]> availability) {
-        this.availability = availability;
+    public void setAvailability(Map<String, String[]> availability) throws Exception {
+        int num_timeslots_available = 0;
+
+        for(String[] dayOfWeek : availability.values()){
+            num_timeslots_available += dayOfWeek.length;
+        }
+        if(num_timeslots_available == 0){
+            throw new Exception("Member" + this.userId + " has no available timeslots");
+        }
+        else{
+            this.availability = availability;
+        }
+
     }
 
     public int getNumActiveConfigs() {

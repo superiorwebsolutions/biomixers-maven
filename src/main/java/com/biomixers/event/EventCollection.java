@@ -156,7 +156,7 @@ public class EventCollection {
 
                 Member member = eventMemberAttending.getMemberData();
 
-                List<Integer> prev_members_met = member.getMembersMet();
+                Set<Integer> prev_members_met = member.getMembersMet();
 
                 List<Integer> prev_members_met_intersection = new ArrayList<>(members_attending.keySet());
                 prev_members_met_intersection.retainAll(prev_members_met);
@@ -295,7 +295,7 @@ public class EventCollection {
                     for(EventMemberAttending m : membersAttending.values()){
                         Member mData = m.getMemberData();
                         int mUserId = m.getUserId();
-                        List<Integer> prevMembersMet = mData.getMembersMet();
+                        Set<Integer> prevMembersMet = mData.getMembersMet();
 
                         if(prevMembersMet.contains(userId)){
                             if(m.getPmc() == 0){
