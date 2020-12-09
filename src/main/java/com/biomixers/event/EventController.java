@@ -29,13 +29,13 @@ public class EventController {
     }
 
     @GetMapping("/final")
-    public List<FinalEventCollection> getFinalEventCollection(){
+    public List<FinalEventCollection> getFinalEventCollection() throws Exception {
 
 
         List<FinalEventCollection> finalEventCollection = eventService.getFinalEventCollection();
 
-        // TODO:  Change to 0, 15 (this breaks it, since repeat members.  Find a way to make unique Ids for members, eventmemberattending, and events
-        return finalEventCollection.subList(0, 5);
+        // TODO:  Change to 5, 15 (this breaks it, since repeat members.  Find a way to make unique Ids for members, eventmemberattending, and events
+        return finalEventCollection.subList(0, 15);
     }
 
     @GetMapping("/event/{eventId}")

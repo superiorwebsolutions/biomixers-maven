@@ -1,6 +1,7 @@
 package com.biomixers.event;
 
 import com.biomixers.BiomixersApplication;
+import com.biomixers.filter.SearchFilterQuery;
 import com.biomixers.member.Member;
 import com.biomixers.member.MemberController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,12 @@ public class EventService {
     private FinalEventCollectionRepository finalEventCollectionRepository;
 
 
-    public List<FinalEventCollection> getFinalEventCollection(){
+    public List<FinalEventCollection> getFinalEventCollection() throws Exception {
+
+        // If SearchFilterQuery has been changed, then refresh generated sample data
+        if(!BiomixersApplication.getSearchFilterQuery().equals(new SearchFilterQuery())){
+            memberController.generateSampleData();
+        }
 
 
         List<Member> membersList = memberController.getAllMembers();

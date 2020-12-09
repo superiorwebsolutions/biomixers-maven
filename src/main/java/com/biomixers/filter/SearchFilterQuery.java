@@ -1,7 +1,9 @@
 package com.biomixers.filter;
 
+import java.util.Objects;
+
 public class SearchFilterQuery {
-    private int minAllowedPerRestaurant = 4;
+    private int minAllowedPerRestaurant = 6;
     private int maxAllowedPerRestaurant = 16;
     private int numDaysOfAvailability = 4;
     private int numFoodPreferences = 3;
@@ -81,6 +83,25 @@ public class SearchFilterQuery {
 
     public void setRandomizeResults(boolean randomizeResults) {
         this.randomizeResults = randomizeResults;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SearchFilterQuery that = (SearchFilterQuery) o;
+        return minAllowedPerRestaurant == that.minAllowedPerRestaurant &&
+                maxAllowedPerRestaurant == that.maxAllowedPerRestaurant &&
+                numDaysOfAvailability == that.numDaysOfAvailability &&
+                numFoodPreferences == that.numFoodPreferences &&
+                maxNumberOfMembersMetAllowance == that.maxNumberOfMembersMetAllowance &&
+                Float.compare(that.percentageOfMembersMet, percentageOfMembersMet) == 0 &&
+                randomizeResults == that.randomizeResults;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minAllowedPerRestaurant, maxAllowedPerRestaurant, numDaysOfAvailability, numFoodPreferences, maxNumberOfMembersMetAllowance, percentageOfMembersMet, randomizeResults);
     }
 
     @Override

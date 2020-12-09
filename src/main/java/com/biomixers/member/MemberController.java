@@ -42,6 +42,11 @@ public class MemberController {
         return memberService.getAllMembers();
     }
 
+    @GetMapping("/search-filter-query")
+    public SearchFilterQuery getSearchFilterQuery() {
+        return BiomixersApplication.getSearchFilterQuery();
+    }
+
     @GetMapping("/generate-sample-data")
     public ResponseEntity<String> generateSampleData() throws Exception {
         SearchFilterQuery searchFilterQuery = BiomixersApplication.getSearchFilterQuery();
