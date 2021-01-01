@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
+//@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class MemberController {
 
