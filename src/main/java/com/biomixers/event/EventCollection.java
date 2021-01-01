@@ -4,7 +4,7 @@ import com.biomixers.member.Member;
 import com.biomixers.BiomixersApplication;
 import com.biomixers.util.HelperFunctions;
 import com.biomixers.util.Constants;
-import javafx.util.Pair;
+import com.biomixers.util.Pair;
 
 import java.util.*;
 
@@ -311,7 +311,8 @@ public class EventCollection {
                         System.out.println("Deleted member with highest PMC:  " + userId);
 
                     // Determine which config_branches to delete from master config_tree, and create a list of keys so we can delete after the loop
-                    deleteTheseKeysFromDict.add(new Pair<>(configId, userId));
+                    Pair<Integer, Integer> pair = new Pair<>(configId, userId);
+                    deleteTheseKeysFromDict.add(pair);
                     currentAttendingCount -= 1;
 
                     event.setCount(currentAttendingCount);
@@ -484,7 +485,7 @@ public class EventCollection {
         }
 
         if(Constants.DEBUG)
-            System.out.println(finalMemberList.size() + " members placed of " + this.membersList.size());
+            System.out.println(finalMemberList.size() + " members placed");
 
         Set<Integer> unplacedMembersIntList = this.getMembersAsIntegerSet();
         unplacedMembersIntList.removeAll(finalMemberList);
@@ -502,7 +503,7 @@ public class EventCollection {
 
         finalEventCollection.setConfigTree(finalConfigTree);
         finalEventCollection.setMembersPlacedList(unplacedMembers);
-        finalEventCollection.setHtmlPlaced(finalMemberList.size() + " members placed of " + this.membersList.size());
+        finalEventCollection.setHtmlPlaced(finalMemberList.size() + " members placed");
         finalEventCollection.setTotalPmc(totalPmcForConfig);
         finalEventCollection.setNumUnplacedInt(unplacedMembersIntList.size());
         finalEventCollection.setNumPlacedInt(finalMemberList.size());
